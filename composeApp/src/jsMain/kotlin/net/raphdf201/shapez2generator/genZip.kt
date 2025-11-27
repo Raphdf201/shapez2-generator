@@ -1,5 +1,6 @@
 package net.raphdf201.shapez2generator
 
+import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.fileBuilders.Manifest
 import net.raphdf201.shapez2generator.fileBuilders.ManifestDependency
 import net.raphdf201.shapez2generator.fileBuilders.genCsprojFile
@@ -23,7 +24,9 @@ fun genAndDownload(
     version: String,
     affectsSavegames: Boolean,
     disablesAchievements: Boolean,
-    modDependencies: List<ManifestDependency>
+    langVersion: Int,
+    modDependencies: List<ManifestDependency>,
+    assemblies: List<Assembly>
 ) {
     val zip = js("new JSZip()") as JSZip
 
@@ -48,7 +51,7 @@ fun genAndDownload(
         )
     )
     zip.file("translations.json", getTranslationsFile())
-    zip.file("$projectId.csproj", genCsprojFile())
+    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modDependencies[0].ModTitle == "ShapezShifter"))
     zip.file("$projectId.sln", genSolutionFile(projectId))
     zip.file("Steam/base.vdf", genVdfFile(projectTitle, projectDescription))
     zip.file("Steam/SteamPublishLinux.sh", steamScriptLinux)

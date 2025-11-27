@@ -1,5 +1,82 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
-fun genCsprojFile(): String {
-    return ""
+fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly>, shapezShifter: Boolean): String {
+    val publicizedItems = assemblies
+        .filter { it.publicized }.joinToString("\n") {
+            """
+    <ItemGroup>
+        <Publicize Include="${it.name}" />
+    </ItemGroup>"""
+        }
+
+    val includedAssemblies = assemblies
+        .filter { it.included }.joinToString("\n") {
+            """
+        <Reference Include="${it.name.dropLast(4)}">
+            <HintPath>$(SPZ2_PATH)\${it.name}</HintPath>
+            <Private>False</Private>
+        </Reference>"""
+        }
+
+    val spzShifter = if (shapezShifter) """
+        <Reference Include="ShapezShifter">
+            <HintPath>$(SPZ2_PERSISTENT)\mods\ShapezShifter\ShapezShifter.dll</HintPath>
+            <Private>False</Private>
+        </Reference>""" else ""
+    return """
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Nullable>disable</Nullable>
+        <RunPostBuildEvent>Always</RunPostBuildEvent>
+        <LangVersion>$langVersion</LangVersion>
+        <RootNamespace>$projectId</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <OutputPath>$(SPZ2_PERSISTENT)\mods\$projectId</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PublicizerLogFilePath>logs/krafs</PublicizerLogFilePath>
+    </PropertyGroup>
+
+    <Target Name="SteamPublish">
+        <Exec Command='sh .\Steam\SteamPublish.sh "$(OutputPath)'/>
+    </Target>
+
+    <ItemGroup>
+        <PackageReference Include="MonoMod.RuntimeDetour" Version="25.3.0"/>
+        <PackageReference Include="Krafs.Publicizer" Version="2.3.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="manifest.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="translations.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Resources/*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    $publicizedItems
+
+    <ItemGroup>
+        $spzShifter
+        $includedAssemblies
+    </ItemGroup>
+</Project>
+"""
 }
+
+data class Assembly(
+    val name: String,
+    val included: Boolean,
+    val publicized: Boolean
+)
