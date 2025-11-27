@@ -20,26 +20,33 @@ fun genAndDownload(
     projectDescription: String,
     projectAuthor: String,
     gameVersionSupportRange: String,
+    version: String,
     affectsSavegames: Boolean,
+    disablesAchievements: Boolean,
     modDependencies: List<ManifestDependency>
 ) {
-    val zip = JSZip()
+    val zip = js("new JSZip()") as JSZip
 
     zip.file(".gitignore", genGitignoreFile())
     zip.file("Main.cs", genMainFile(projectId))
-    zip.file("manifest.json", genManifestFile(Manifest(
-        Version = "0.0.1",
-        Title = projectTitle,
-        Description = projectDescription,
-        Author = projectAuthor,
-        SavedModVersionCompabilityRangeWithSelf = "0.*.*",
-        GameVersionSupportRange = gameVersionSupportRange,
-        AffectsSaveGames = affectsSavegames,
-        Conflicts = emptyList(),
-        IconPath = "Resources/icon.png",
-        Assemblies = listOf("$projectId.dll"),
-        Dependencies = modDependencies
-    )))
+    zip.file(
+        "manifest.json", genManifestFile(
+            Manifest(
+                Version = version,
+                Title = projectTitle,
+                Description = projectDescription,
+                Author = projectAuthor,
+                SavedModVersionCompabilityRangeWithSelf = "0.*.*",
+                GameVersionSupportRange = gameVersionSupportRange,
+                AffectsSaveGames = affectsSavegames,
+                DisablesAchievements = disablesAchievements,
+                Conflicts = emptyList(),
+                IconPath = "",
+                Assemblies = listOf("$projectId.dll"),
+                Dependencies = modDependencies
+            )
+        )
+    )
     zip.file("translations.json", getTranslationsFile())
     zip.file("$projectId.csproj", genCsprojFile())
     zip.file("$projectId.sln", genSolutionFile(projectId))
@@ -47,9 +54,9 @@ fun genAndDownload(
     zip.file("Steam/SteamPublishLinux.sh", steamScriptLinux)
     zip.file("Steam/SteamPublishWindows.sh", steamScriptWindows)
 
-    val blob = zip.generateAsync(
+    val blob = zip.generate(
         js("({ type: 'blob', compression: 'DEFLATE' })")
-    ).await()
+    )
 
     saveAs(blob, "$projectId.zip")
 }

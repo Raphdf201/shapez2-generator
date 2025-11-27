@@ -16,6 +16,7 @@ data class Manifest(
     val SavedModVersionCompabilityRangeWithSelf: String,
     val GameVersionSupportRange: String,
     val AffectsSaveGames: Boolean,
+    val DisablesAchievements: Boolean,
     val Conflicts: List<String>,
     val IconPath: String,
     val Assemblies: List<String>,
