@@ -12,7 +12,8 @@ import net.raphdf201.shapez2generator.fileBuilders.genVdfFile
 import net.raphdf201.shapez2generator.fileBuilders.getTranslationsFile
 import net.raphdf201.shapez2generator.fileBuilders.steamScriptLinux
 import net.raphdf201.shapez2generator.fileBuilders.steamScriptWindows
-import net.raphdf201.shapez2generator.npm.JSZip
+import net.raphdf201.shapez2generator.npm.createZip
+import net.raphdf201.shapez2generator.npm.createZipOptions
 import net.raphdf201.shapez2generator.npm.saveAs
 
 fun genAndDownload(
@@ -28,8 +29,8 @@ fun genAndDownload(
     modDependencies: List<ManifestDependency>,
     assemblies: List<Assembly>
 ) {
-    val zip = js("new JSZip()") as JSZip
 
+    val zip = createZip()
     zip.file(".gitignore", genGitignoreFile())
     zip.file("Main.cs", genMainFile(projectId))
     zip.file(
@@ -57,9 +58,7 @@ fun genAndDownload(
     zip.file("Steam/SteamPublishLinux.sh", steamScriptLinux)
     zip.file("Steam/SteamPublishWindows.sh", steamScriptWindows)
 
-    val blob = zip.generate(
-        js("({ type: 'blob', compression: 'DEFLATE' })")
-    )
+    val blob = zip.generate(createZipOptions())
 
     saveAs(blob, "$projectId.zip")
 }

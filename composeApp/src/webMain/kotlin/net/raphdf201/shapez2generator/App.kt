@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.fileBuilders.ManifestDependency
+import net.raphdf201.shapez2generator.removeWhitespace
 
 @Composable
 fun App() {
@@ -131,10 +132,14 @@ fun App() {
                             singleLine = true
                         )
                         Spacer(Modifier.height(10.dp))
-                        CheckBox(affectsSavegames, { affectsSavegames = it }) {
+                        _root_ide_package_.net.raphdf201.shapez2generator.CheckBox(
+                            affectsSavegames,
+                            { affectsSavegames = it }) {
                             Text("Affects savegames")
                         }
-                        CheckBox(disablesAchievements, { disablesAchievements = it }) {
+                        _root_ide_package_.net.raphdf201.shapez2generator.CheckBox(
+                            disablesAchievements,
+                            { disablesAchievements = it }) {
                             Text("Disables achievements")
                         }
                     }
@@ -192,18 +197,22 @@ fun App() {
                             OutlinedCard(Modifier.width(550.dp)) {
                                 Column(Modifier.padding(10.dp)) {
                                     Text(asm.name)
-                                    CheckBox(asm.included, {
-                                        assemblies.toMutableList().apply {
-                                            this[i] = Assembly(asm.name, it, asm.publicized)
-                                        }
-                                    }) {
+                                    _root_ide_package_.net.raphdf201.shapez2generator.CheckBox(
+                                        asm.included,
+                                        {
+                                            assemblies = assemblies.toMutableList().apply {
+                                                this[i] = Assembly(asm.name, it, asm.publicized)
+                                            }
+                                        }) {
                                         Text("Enable")
                                     }
-                                    CheckBox(asm.publicized, {
-                                        assemblies.toMutableList().apply {
-                                            this[i] = Assembly(asm.name, asm.included, it)
-                                        }
-                                    }) {
+                                    _root_ide_package_.net.raphdf201.shapez2generator.CheckBox(
+                                        asm.publicized,
+                                        {
+                                            assemblies = assemblies.toMutableList().apply {
+                                                this[i] = Assembly(asm.name, asm.included, it)
+                                            }
+                                        }) {
                                         Text("Publicized")
                                     }
                                 }
@@ -213,9 +222,19 @@ fun App() {
                     }
                 }
                 Button({
-                    genAndDownload(projectId.trim(), projectTitle.trim(), projectDescription.trim(),
-                        projectAuthor.trim(), gameVersionSupportRange.trim(), version.trim(),
-                        affectsSavegames, disablesAchievements, langVersion, modDependencies, assemblies)
+                    _root_ide_package_.net.raphdf201.shapez2generator.genAndDownload(
+                        projectId.trim(),
+                        projectTitle.trim(),
+                        projectDescription.trim(),
+                        projectAuthor.trim(),
+                        gameVersionSupportRange.trim(),
+                        version.trim(),
+                        affectsSavegames,
+                        disablesAchievements,
+                        langVersion,
+                        modDependencies,
+                        assemblies
+                    )
                 }) {
                     Text("Download")
                     Icon(Icons.Default.Download, null)

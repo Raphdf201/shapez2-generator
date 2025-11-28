@@ -1,6 +1,6 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
-fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly>, shapezShifter: Boolean): String {
+fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<net.raphdf201.shapez2generator.fileBuilders.Assembly>, shapezShifter: Boolean): String {
     val publicizedItems = assemblies
         .filter { it.publicized }.joinToString("\n") {
             """
