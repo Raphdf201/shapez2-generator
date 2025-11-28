@@ -17,7 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -29,13 +28,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.fileBuilders.ManifestDependency
-import net.raphdf201.shapez2generator.removeWhitespace
+import net.raphdf201.shapez2generator.fileBuilders.genAndDownload
 
 @Composable
 fun App() {
@@ -132,12 +129,12 @@ fun App() {
                             singleLine = true
                         )
                         Spacer(Modifier.height(10.dp))
-                        _root_ide_package_.net.raphdf201.shapez2generator.CheckBox(
+                        CheckBox(
                             affectsSavegames,
                             { affectsSavegames = it }) {
                             Text("Affects savegames")
                         }
-                        _root_ide_package_.net.raphdf201.shapez2generator.CheckBox(
+                        CheckBox(
                             disablesAchievements,
                             { disablesAchievements = it }) {
                             Text("Disables achievements")
@@ -197,7 +194,7 @@ fun App() {
                             OutlinedCard(Modifier.width(550.dp)) {
                                 Column(Modifier.padding(10.dp)) {
                                     Text(asm.name)
-                                    _root_ide_package_.net.raphdf201.shapez2generator.CheckBox(
+                                    CheckBox(
                                         asm.included,
                                         {
                                             assemblies = assemblies.toMutableList().apply {
@@ -206,7 +203,7 @@ fun App() {
                                         }) {
                                         Text("Enable")
                                     }
-                                    _root_ide_package_.net.raphdf201.shapez2generator.CheckBox(
+                                    CheckBox(
                                         asm.publicized,
                                         {
                                             assemblies = assemblies.toMutableList().apply {
@@ -222,7 +219,7 @@ fun App() {
                     }
                 }
                 Button({
-                    _root_ide_package_.net.raphdf201.shapez2generator.genAndDownload(
+                    genAndDownload(
                         projectId.trim(),
                         projectTitle.trim(),
                         projectDescription.trim(),
@@ -235,7 +232,11 @@ fun App() {
                         modDependencies,
                         assemblies
                     )
-                }) {
+                }, Modifier,
+                    !projectId.isBlank()
+                            && !projectTitle.isBlank()
+                            && !projectAuthor.isBlank()
+                    ) {
                     Text("Download")
                     Icon(Icons.Default.Download, null)
                 }
@@ -243,3 +244,5 @@ fun App() {
         }
     }
 }
+
+fun String.removeWhitespace() = this.replace(" ", "")

@@ -1,17 +1,5 @@
-package net.raphdf201.shapez2generator
+package net.raphdf201.shapez2generator.fileBuilders
 
-import net.raphdf201.shapez2generator.fileBuilders.Assembly
-import net.raphdf201.shapez2generator.fileBuilders.Manifest
-import net.raphdf201.shapez2generator.fileBuilders.ManifestDependency
-import net.raphdf201.shapez2generator.fileBuilders.genCsprojFile
-import net.raphdf201.shapez2generator.fileBuilders.genGitignoreFile
-import net.raphdf201.shapez2generator.fileBuilders.genMainFile
-import net.raphdf201.shapez2generator.fileBuilders.genManifestFile
-import net.raphdf201.shapez2generator.fileBuilders.genSolutionFile
-import net.raphdf201.shapez2generator.fileBuilders.genVdfFile
-import net.raphdf201.shapez2generator.fileBuilders.getTranslationsFile
-import net.raphdf201.shapez2generator.fileBuilders.steamScriptLinux
-import net.raphdf201.shapez2generator.fileBuilders.steamScriptWindows
 import net.raphdf201.shapez2generator.npm.createZip
 import net.raphdf201.shapez2generator.npm.createZipOptions
 import net.raphdf201.shapez2generator.npm.saveAs
