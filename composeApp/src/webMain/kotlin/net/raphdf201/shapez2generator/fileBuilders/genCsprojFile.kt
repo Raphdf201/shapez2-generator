@@ -1,5 +1,9 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
+import net.raphdf201.shapez2generator.npm.createZip
+import net.raphdf201.shapez2generator.npm.createZipOptions
+import net.raphdf201.shapez2generator.npm.saveAs
+
 fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<net.raphdf201.shapez2generator.fileBuilders.Assembly>, shapezShifter: Boolean): String {
     val publicizedItems = assemblies
         .filter { it.publicized }.joinToString("\n") {
@@ -73,6 +77,22 @@ fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<net.raph
     </ItemGroup>
 </Project>
 """
+}
+
+fun genAndDownloadCsproj(
+    projectId: String,
+    langVersion: Int,
+    modDependencies: List<ManifestDependency>,
+    assemblies: List<Assembly>
+) {
+
+    val zip = createZip()
+
+    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modDependencies[0].ModTitle == "ShapezShifter"))
+
+    val blob = zip.generate(createZipOptions())
+
+    saveAs(blob, "$projectId.zip")
 }
 
 data class Assembly(

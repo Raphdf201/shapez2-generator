@@ -32,7 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.fileBuilders.ManifestDependency
-import net.raphdf201.shapez2generator.fileBuilders.genAndDownload
+import net.raphdf201.shapez2generator.fileBuilders.genAndDownloadCsproj
+import net.raphdf201.shapez2generator.fileBuilders.genAndDownloadZip
 
 @Composable
 fun App() {
@@ -218,27 +219,42 @@ fun App() {
                         }
                     }
                 }
-                Button({
-                    genAndDownload(
-                        projectId.trim(),
-                        projectTitle.trim(),
-                        projectDescription.trim(),
-                        projectAuthor.trim(),
-                        gameVersionSupportRange.trim(),
-                        version.trim(),
-                        affectsSavegames,
-                        disablesAchievements,
-                        langVersion,
-                        modDependencies,
-                        assemblies
-                    )
-                }, Modifier,
-                    !projectId.isBlank()
-                            && !projectTitle.isBlank()
-                            && !projectAuthor.isBlank()
+                Row {
+                    Button(
+                        {
+                            genAndDownloadZip(
+                                projectId.trim(),
+                                projectTitle.trim(),
+                                projectDescription.trim(),
+                                projectAuthor.trim(),
+                                gameVersionSupportRange.trim(),
+                                version.trim(),
+                                affectsSavegames,
+                                disablesAchievements,
+                                langVersion,
+                                modDependencies,
+                                assemblies
+                            )
+                        }, Modifier,
+                        !projectId.isBlank()
+                                && !projectTitle.isBlank()
+                                && !projectAuthor.isBlank()
                     ) {
-                    Text("Download")
-                    Icon(Icons.Default.Download, null)
+                        Text("Download project")
+                        Icon(Icons.Default.Download, null)
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    Button({
+                        genAndDownloadCsproj(
+                            projectId.trim(),
+                            langVersion,
+                            modDependencies,
+                            assemblies
+                        )
+                    }) {
+                        Text("Download .csproj only")
+                        Icon(Icons.Default.Download, null)
+                    }
                 }
             }
         }

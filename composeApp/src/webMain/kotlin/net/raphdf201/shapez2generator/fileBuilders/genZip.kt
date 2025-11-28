@@ -4,7 +4,7 @@ import net.raphdf201.shapez2generator.npm.createZip
 import net.raphdf201.shapez2generator.npm.createZipOptions
 import net.raphdf201.shapez2generator.npm.saveAs
 
-fun genAndDownload(
+fun genAndDownloadZip(
     projectId: String,
     projectTitle: String,
     projectDescription: String,
