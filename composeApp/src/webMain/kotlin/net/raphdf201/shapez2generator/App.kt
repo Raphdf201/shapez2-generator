@@ -243,7 +243,7 @@ fun App() {
                         Text("Download project")
                         Icon(Icons.Default.Download, null)
                     }
-                    Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.width(10.dp))
                     Button({
                         genAndDownloadCsproj(
                             projectId.trim(),
