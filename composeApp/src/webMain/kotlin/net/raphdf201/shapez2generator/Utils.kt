@@ -22,7 +22,7 @@ fun getDefaultAssemblies() = listOf(
     Assembly("Game.Core.Editor.MeshBaker.dll", false, false),
     Assembly("Game.Core.Effects.dll", false, false),
     Assembly("Game.Core.Effects.Editor.MonoBehaviours.dll", false, false),
-    Assembly("Game.Core.Map.dll", true, false),
+    Assembly("Game.Core.Map.dll", false, false),
     Assembly("Game.Core.Map.Layout.dll", false, false),
     Assembly("Game.Core.Map.Layout.Model.dll", false, false),
     Assembly("Game.Core.Map.Model.dll", true, false),
