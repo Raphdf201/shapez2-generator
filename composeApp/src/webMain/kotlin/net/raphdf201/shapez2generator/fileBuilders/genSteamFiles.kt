@@ -1,8 +1,7 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
 fun genVdfFile(projectTitle: String, projectDescription: String): String {
-    return """
-"workshopitem"
+    return """"workshopitem"
 {
     "appid" "2162800"
     "publishedfileid" "3542611357"
@@ -15,8 +14,8 @@ fun genVdfFile(projectTitle: String, projectDescription: String): String {
 """
 }
 
-fun genWindowsSteamScript(steamUserName: String): String = $$"""
-#!/usr/bin/env bash
+fun genWindowsSteamScript(steamUserName: String): String =
+    $$"""#!/usr/bin/env bash
 
 CONTENT_PATH=$1
 
@@ -63,8 +62,8 @@ sed -i 's/\("publishedfileid"[ \t]*"\)[0-9]\+"/\1'"$FILE_ID"'"/'  Steam\\base.vd
 rm Steam\\base.tmp.vdf
 """
 
-fun genLinuxSteamScript(steamUserName: String): String = $$"""
-#!/usr/bin/env bash
+fun genLinuxSteamScript(steamUserName: String): String =
+    $$"""#!/usr/bin/env bash
 
 CONTENT_PATH=$1
 

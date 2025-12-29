@@ -1,8 +1,7 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
 fun genReadme(projectTitle: String): String {
-    return """
-# $projectTitle
+    return """# $projectTitle
 
 Welcome to your project.
 

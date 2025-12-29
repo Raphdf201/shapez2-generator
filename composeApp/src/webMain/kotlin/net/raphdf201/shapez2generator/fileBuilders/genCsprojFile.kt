@@ -27,8 +27,7 @@ fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly
             <HintPath>$(SPZ2_SHIFTER)</HintPath>
             <Private>False</Private>
         </Reference>""" else ""
-    return """
-<Project Sdk="Microsoft.NET.Sdk">
+    return """<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <Nullable>disable</Nullable>

@@ -1,8 +1,7 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
 fun genMainFile(projectId: String): String {
-    return """
-using Core.Logging;
+    return """using Core.Logging;
 using ShapezShifter.Kit;
 
 namespace $projectId;

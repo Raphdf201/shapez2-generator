@@ -5,15 +5,13 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 fun genSolutionFile(projectId: String, useSlnX: Boolean): String = if (useSlnX) {
-    return """
-<Solution>
+    return """<Solution>
   <Project Path="$projectId.csproj" />
 </Solution>
 """.trimIndent()
 } else {
     val projectGuid = Uuid.random().toString().uppercase()
-    return """
-Microsoft Visual Studio Solution File, Format Version 12.00
+    return """Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "$projectId", "$projectId.csproj", "{$projectGuid}"
 EndProject
 Global

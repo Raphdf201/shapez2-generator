@@ -1,11 +1,10 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
 fun getTranslationsFile(): String {
-    return """
-{
+    return """{
   "en-US": {
-    "building-id": "Building name",
-  },
+    "building-id": "Building name"
+  }
 }
 """
 }

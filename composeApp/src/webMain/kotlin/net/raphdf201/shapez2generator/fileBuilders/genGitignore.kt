@@ -1,8 +1,7 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
 fun genGitignoreFile(): String {
-    return """
-bin/
+    return """bin/
 obj/
 logs/
 /packages/
