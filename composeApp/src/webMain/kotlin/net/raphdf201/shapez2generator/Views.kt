@@ -8,10 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.Button
@@ -68,7 +64,7 @@ fun ProjectInfoSection(
     onDisablesAchievementsChange: (Boolean) -> Unit,
     onUseNewSolutionFormatChange: (Boolean) -> Unit
 ) {
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+    Column {
         TextField(
             value = projectId,
             onValueChange = onProjectIdChange,
@@ -144,7 +140,7 @@ fun DependenciesSection(
     dependencies: List<ManifestDependency>,
     onDependenciesChange: (List<ManifestDependency>) -> Unit
 ) {
-    Column(Modifier.verticalScroll(rememberScrollState())) {
+    Column {
         Text("Dependencies")
 
         dependencies.forEachIndexed { i, dep ->
@@ -220,17 +216,18 @@ fun AssembliesSection(
     assemblies: List<Assembly>,
     onAssembliesChange: (List<Assembly>) -> Unit
 ) {
-    LazyColumn {
-        itemsIndexed(assemblies) { i, asm ->
+    Column {
+        assemblies.forEachIndexed { i, asm ->
             AssemblyCard(
-                assembly = asm,
-                onAssemblyChange = { newAsm ->
-                    onAssembliesChange(
-                        assemblies.toMutableList().apply { this[i] = newAsm }
-                    )
-                }
-            )
-            Spacer(Modifier.height(10.dp))
+                asm
+            ) { newAsm ->
+                onAssembliesChange(
+                    assemblies.toMutableList().apply { this[i] = newAsm }
+                )
+            }
+            if (i < assemblies.lastIndex) {
+                Spacer(Modifier.height(10.dp))
+            }
         }
     }
 }
@@ -264,6 +261,7 @@ fun AssemblyCard(
 
 @Composable
 fun ActionButtons(
+    modifier: Modifier,
     projectId: String,
     projectTitle: String,
     projectAuthor: String,
@@ -278,7 +276,7 @@ fun ActionButtons(
     modDependencies: List<ManifestDependency>,
     assemblies: List<Assembly>
 ) {
-    Row {
+    Row(modifier) {
         Button(
             onClick = {
                 genAndDownloadZip(
