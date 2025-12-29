@@ -6,7 +6,7 @@ import net.raphdf201.shapez2generator.npm.saveAs
 
 fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly>, shapezShifter: Boolean): String {
     val publicizedItems = assemblies
-        .filter { it.publicized }.joinToString("\n") {
+        .filter { it.publicized && it.included }.joinToString("\n") {
             """
     <ItemGroup>
         <Publicize Include="${it.name}" />

@@ -253,7 +253,8 @@ fun AssemblyCard(
 
             CheckBox(
                 checked = assembly.publicized,
-                onCheckedChange = { onAssemblyChange(Assembly(assembly.name, assembly.included, it)) }
+                onCheckedChange = { onAssemblyChange(Assembly(assembly.name, assembly.included, it)) },
+                enabled = assembly.included
             ) {
                 Text("Publicized")
             }
