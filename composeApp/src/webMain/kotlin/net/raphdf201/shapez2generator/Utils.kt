@@ -29,7 +29,7 @@ fun getDefaultAssemblies() = listOf(
     Assembly("Game.Core.Map.Simulation.dll", true, false),
     Assembly("Game.Core.Modding.dll", true, false),
     Assembly("Game.Core.Rendering.dll", true, true),
-    Assembly("Game.Core.Rendering.ShaderProfiling.dll", false, true),
+    Assembly("Game.Core.Rendering.ShaderProfiling.dll", false, false),
     Assembly("Game.Core.Simulation.dll", true, false),
     Assembly("Game.Achievements.dll", false, false),
     Assembly("Game.Achievements.Platform.dll", false, false),
