@@ -42,7 +42,6 @@ fun genAndDownloadZip(
         )
     )
     zip.file("README.md", genReadme(projectTitle))
-    zip.file("translations.json", getTranslationsFile())
     zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modDependencies[0].ModId == "steam:3542611357"))
     zip.file(if (useNewSolutionFormat) "$projectId.slnx" else "$projectId.sln", genSolutionFile(projectId, useNewSolutionFormat))
     zip.file("Steam/base.vdf", genVdfFile(projectTitle, projectDescription))
