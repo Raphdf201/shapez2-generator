@@ -10,5 +10,32 @@
     <script type="application/javascript" src="composeApp.js"></script>
 </head>
 <body>
+<!-- Splash Screen -->
+<div id="splash-screen">
+    <div class="logo-container">
+        <img src="https://cdn.impress.games/presskits/b05b8fc32a22c183a871c2d84a102828/logos/3.png"
+             alt="Shapez2 Logo"
+             class="logo">
+    </div>
+    <div class="loading-text">SHAPEZ2 PROJECT GENERATOR</div>
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+    <div class="loading-dots">Loading</div>
+</div>
+
+<script>
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+                splash.classList.add('hidden');
+                setTimeout(function() {
+                    splash.remove();
+                }, 600);
+            }
+        }, 500);
+    });
+</script>
 </body>
 </html>
