@@ -1,12 +1,16 @@
 package net.raphdf201.shapez2generator
 
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.fileBuilders.ManifestDependency
 
 fun String.removeWhitespace() = this.replace(" ", "")
 
-fun getDefaultDependencies() = listOf(
-    ManifestDependency("steam:3542611357", "Shapez Shifter", ">=0.9.1")
+fun getDefaultDependencies(shifterVersion: String) = listOf(
+    ManifestDependency("steam:3542611357", "Shapez Shifter", ">=$shifterVersion")
 )
 
 fun getDefaultAssemblies() = listOf(
@@ -44,3 +48,17 @@ fun getDefaultAssemblies() = listOf(
     Assembly("Game.Orchestration.Achievements.dll", false, false),
     Assembly("UnityEngine.CoreModule.dll", true, false),
 )
+
+val prettyJson = Json {
+    prettyPrint = true
+}
+
+val notStrictJson = Json {
+    ignoreUnknownKeys = true
+}
+
+val client = HttpClient {
+    install(ContentNegotiation) {
+        json(notStrictJson)
+    }
+}

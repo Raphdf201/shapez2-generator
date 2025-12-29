@@ -2,9 +2,10 @@ package net.raphdf201.shapez2generator.fileBuilders
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import net.raphdf201.shapez2generator.prettyJson
 
-fun genManifestFile(config: net.raphdf201.shapez2generator.fileBuilders.Manifest): String {
-    return Json.encodeToString(config)
+fun genManifestFile(config: Manifest): String {
+    return prettyJson.encodeToString(config)
 }
 
 @Serializable
@@ -20,7 +21,7 @@ data class Manifest(
     val Conflicts: List<String>,
     val IconPath: String,
     val Assemblies: List<String>,
-    val Dependencies: List<net.raphdf201.shapez2generator.fileBuilders.ManifestDependency>
+    val Dependencies: List<ManifestDependency>
 )
 
 @Serializable

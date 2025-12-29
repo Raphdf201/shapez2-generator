@@ -4,7 +4,7 @@ import net.raphdf201.shapez2generator.npm.createZip
 import net.raphdf201.shapez2generator.npm.createZipOptions
 import net.raphdf201.shapez2generator.npm.saveAs
 
-fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<net.raphdf201.shapez2generator.fileBuilders.Assembly>, shapezShifter: Boolean): String {
+fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly>, shapezShifter: Boolean): String {
     val publicizedItems = assemblies
         .filter { it.publicized }.joinToString("\n") {
             """
@@ -24,7 +24,7 @@ fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<net.raph
 
     val spzShifter = if (shapezShifter) """
         <Reference Include="ShapezShifter">
-            <HintPath>$(SPZ2_PERSISTENT)\mods\ShapezShifter\ShapezShifter.dll</HintPath>
+            <HintPath>$(SPZ2_SHIFTER)</HintPath>
             <Private>False</Private>
         </Reference>""" else ""
     return """
