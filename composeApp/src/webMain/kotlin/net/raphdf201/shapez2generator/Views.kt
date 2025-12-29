@@ -53,16 +53,20 @@ fun ProjectInfoSection(
     projectTitle: String,
     projectDescription: String,
     projectAuthor: String,
+    publishingSteamUsername: String,
     gameVersionSupportRange: String,
     affectsSavegames: Boolean,
     disablesAchievements: Boolean,
+    useNewSolutionFormat: Boolean,
     onProjectIdChange: (String) -> Unit,
     onProjectTitleChange: (String) -> Unit,
     onProjectDescriptionChange: (String) -> Unit,
     onProjectAuthorChange: (String) -> Unit,
+    onPublishingSteamUsernameChange: (String) -> Unit,
     onGameVersionChange: (String) -> Unit,
     onAffectsSavegamesChange: (Boolean) -> Unit,
-    onDisablesAchievementsChange: (Boolean) -> Unit
+    onDisablesAchievementsChange: (Boolean) -> Unit,
+    onUseNewSolutionFormatChange: (Boolean) -> Unit
 ) {
     Column(Modifier.verticalScroll(rememberScrollState())) {
         TextField(
@@ -97,6 +101,14 @@ fun ProjectInfoSection(
         Spacer(Modifier.height(10.dp))
 
         TextField(
+            value = publishingSteamUsername,
+            onValueChange = onPublishingSteamUsernameChange,
+            label = { Text("Publisher steam username") },
+            singleLine = true
+        )
+        Spacer(Modifier.height(10.dp))
+
+        TextField(
             value = gameVersionSupportRange,
             onValueChange = onGameVersionChange,
             label = { Text("Game version support range") },
@@ -116,6 +128,13 @@ fun ProjectInfoSection(
             onCheckedChange = onDisablesAchievementsChange
         ) {
             Text("Disables achievements")
+        }
+
+        CheckBox(
+            checked = useNewSolutionFormat,
+            onCheckedChange = onUseNewSolutionFormatChange
+        ) {
+            Text("Use new solution format (slnx)")
         }
     }
 }
@@ -250,8 +269,10 @@ fun ActionButtons(
     projectDescription: String,
     gameVersionSupportRange: String,
     version: String,
+    steamUsername: String,
     affectsSavegames: Boolean,
     disablesAchievements: Boolean,
+    useNewSolutionFormat: Boolean,
     langVersion: Int,
     modDependencies: List<ManifestDependency>,
     assemblies: List<Assembly>
@@ -266,8 +287,10 @@ fun ActionButtons(
                     projectAuthor.trim(),
                     gameVersionSupportRange.trim(),
                     version.trim(),
+                    steamUsername,
                     affectsSavegames,
                     disablesAchievements,
+                    useNewSolutionFormat,
                     langVersion,
                     modDependencies,
                     assemblies

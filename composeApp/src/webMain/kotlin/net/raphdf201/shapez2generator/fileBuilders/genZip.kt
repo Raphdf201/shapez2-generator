@@ -11,8 +11,10 @@ fun genAndDownloadZip(
     projectAuthor: String,
     gameVersionSupportRange: String,
     version: String,
+    steamUsername: String,
     affectsSavegames: Boolean,
     disablesAchievements: Boolean,
+    useNewSolutionFormat: Boolean,
     langVersion: Int,
     modDependencies: List<ManifestDependency>,
     assemblies: List<Assembly>
@@ -39,12 +41,13 @@ fun genAndDownloadZip(
             )
         )
     )
+    zip.file("README.md", genReadme(projectTitle))
     zip.file("translations.json", getTranslationsFile())
     zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modDependencies[0].ModId == "steam:3542611357"))
-    zip.file("$projectId.sln", genSolutionFile(projectId))
+    zip.file(if (useNewSolutionFormat) "$projectId.slnx" else "$projectId.sln", genSolutionFile(projectId, useNewSolutionFormat))
     zip.file("Steam/base.vdf", genVdfFile(projectTitle, projectDescription))
-    zip.file("Steam/SteamPublishLinux.sh", steamScriptLinux)
-    zip.file("Steam/SteamPublishWindows.sh", steamScriptWindows)
+    zip.file("Steam/SteamPublishLinux.sh", genLinuxSteamScript(steamUsername))
+    zip.file("Steam/SteamPublishWindows.sh", genWindowsSteamScript(steamUsername))
 
     val blob = zip.generate(createZipOptions())
 

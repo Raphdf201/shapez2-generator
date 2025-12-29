@@ -26,11 +26,13 @@ fun App() {
     var projectTitle by remember { mutableStateOf("") }
     var projectDescription by remember { mutableStateOf("") }
     var projectAuthor by remember { mutableStateOf("") }
+    var publishingSteamUsername by remember { mutableStateOf("") }
     var gameVersionSupportRange by remember { mutableStateOf("*") }
     var version by remember { mutableStateOf("0.0.1") }
     var shifterVersion by remember { mutableStateOf("0.10.0") }
     var affectsSavegames by remember { mutableStateOf(false) }
     var disablesAchievements by remember { mutableStateOf(false) }
+    var useNewSolutionFormat by remember { mutableStateOf(false) }
     var langVersion by remember { mutableStateOf(12) }
     var modDependencies by remember { mutableStateOf(getDefaultDependencies(shifterVersion)) }
     var assemblies by remember { mutableStateOf(getDefaultAssemblies()) }
@@ -48,16 +50,20 @@ fun App() {
                         projectTitle = projectTitle,
                         projectDescription = projectDescription,
                         projectAuthor = projectAuthor,
+                        publishingSteamUsername = publishingSteamUsername,
                         gameVersionSupportRange = gameVersionSupportRange,
                         affectsSavegames = affectsSavegames,
                         disablesAchievements = disablesAchievements,
+                        useNewSolutionFormat = useNewSolutionFormat,
                         onProjectIdChange = { projectId = it.removeWhitespace() },
                         onProjectTitleChange = { projectTitle = it },
                         onProjectDescriptionChange = { projectDescription = it },
                         onProjectAuthorChange = { projectAuthor = it },
+                        onPublishingSteamUsernameChange = { publishingSteamUsername = it },
                         onGameVersionChange = { gameVersionSupportRange = it },
                         onAffectsSavegamesChange = { affectsSavegames = it },
-                        onDisablesAchievementsChange = { disablesAchievements = it }
+                        onDisablesAchievementsChange = { disablesAchievements = it },
+                        onUseNewSolutionFormatChange = { useNewSolutionFormat = it },
                     )
 
                     Spacer(Modifier.width(10.dp))
@@ -82,8 +88,10 @@ fun App() {
                      projectDescription,
                      gameVersionSupportRange,
                      version,
+                     publishingSteamUsername,
                      affectsSavegames,
                      disablesAchievements,
+                     useNewSolutionFormat,
                      langVersion,
                      modDependencies,
                      assemblies

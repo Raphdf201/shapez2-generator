@@ -15,7 +15,7 @@ fun genVdfFile(projectTitle: String, projectDescription: String): String {
 """
 }
 
-const val steamScriptWindows = $$"""
+fun genWindowsSteamScript(steamUserName: String): String = $$"""
 #!/usr/bin/env bash
 
 CONTENT_PATH=$1
@@ -47,7 +47,7 @@ cat Steam\\base.tmp.vdf
 TMP_VDF=$CURRENT_DIR\\Steam\\base.tmp.vdf
 
 # Execute
-steamcmd +login lorenzo_tobspr +workshop_build_item "$TMP_VDF" +quit;
+steamcmd +login $$steamUserName +workshop_build_item "$TMP_VDF" +quit;
 
 # Copy published file id back
 cat Steam\\base.tmp.vdf
@@ -63,7 +63,7 @@ sed -i 's/\("publishedfileid"[ \t]*"\)[0-9]\+"/\1'"$FILE_ID"'"/'  Steam\\base.vd
 rm Steam\\base.tmp.vdf
 """
 
-const val steamScriptLinux = $$"""
+fun genLinuxSteamScript(steamUserName: String): String = $$"""
 #!/usr/bin/env bash
 
 CONTENT_PATH=$1
@@ -89,7 +89,7 @@ cat Steam/base.tmp.vdf
 TMP_VDF="$CURRENT_DIR/Steam/base.tmp.vdf"
 
 # Execute
-steamcmd +login lorenzo_tobspr +workshop_build_item "$TMP_VDF" +quit
+steamcmd +login $$steamUserName +workshop_build_item "$TMP_VDF" +quit
 
 # Copy published file id back
 cat Steam/base.tmp.vdf
