@@ -18,6 +18,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import net.raphdf201.shapez2generator.views.ActionButtons
+import net.raphdf201.shapez2generator.views.AssembliesSection
+import net.raphdf201.shapez2generator.views.DependenciesSection
+import net.raphdf201.shapez2generator.views.ProjectInfoSection
 
 @Composable
 fun App() {

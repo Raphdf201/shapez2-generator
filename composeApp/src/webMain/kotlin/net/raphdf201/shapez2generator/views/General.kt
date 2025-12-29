@@ -1,12 +1,10 @@
-package net.raphdf201.shapez2generator
+package net.raphdf201.shapez2generator.views
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
@@ -15,7 +13,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -131,130 +128,6 @@ fun ProjectInfoSection(
             onCheckedChange = onUseNewSolutionFormatChange
         ) {
             Text("Use new solution format (slnx)")
-        }
-    }
-}
-
-@Composable
-fun DependenciesSection(
-    dependencies: List<ManifestDependency>,
-    onDependenciesChange: (List<ManifestDependency>) -> Unit
-) {
-    Column {
-        Text("Dependencies")
-
-        dependencies.forEachIndexed { i, dep ->
-            DependencyCard(
-                dependency = dep,
-                onDependencyChange = { newDep ->
-                    onDependenciesChange(
-                        dependencies.toMutableList().apply { this[i] = newDep }
-                    )
-                }
-            )
-            Spacer(Modifier.height(10.dp))
-        }
-
-        DependencyButtons(
-            onAdd = { onDependenciesChange(dependencies + ManifestDependency("", "", "")) },
-            onRemove = {
-                if (dependencies.isNotEmpty()) {
-                    onDependenciesChange(dependencies.dropLast(1))
-                }
-            }
-        )
-    }
-}
-
-@Composable
-fun DependencyCard(
-    dependency: ManifestDependency,
-    onDependencyChange: (ManifestDependency) -> Unit
-) {
-    OutlinedCard {
-        TextField(
-            value = dependency.ModId,
-            onValueChange = { onDependencyChange(ManifestDependency(it, dependency.ModTitle, dependency.Version)) },
-            label = { Text("Mod Id") },
-            singleLine = true
-        )
-
-        TextField(
-            value = dependency.ModTitle,
-            onValueChange = { onDependencyChange(ManifestDependency(dependency.ModId, it, dependency.Version)) },
-            label = { Text("Mod Title") },
-            singleLine = true
-        )
-
-        TextField(
-            value = dependency.Version,
-            onValueChange = { onDependencyChange(ManifestDependency(dependency.ModId, dependency.ModTitle, it)) },
-            label = { Text("Version") },
-            singleLine = true
-        )
-    }
-}
-
-@Composable
-fun DependencyButtons(
-    onAdd: () -> Unit,
-    onRemove: () -> Unit
-) {
-    Row(Modifier, Arrangement.SpaceEvenly) {
-        Button(onClick = onAdd) {
-            Text("+")
-        }
-        Spacer(Modifier.width(10.dp))
-        Button(onClick = onRemove) {
-            Text("-")
-        }
-    }
-}
-
-@Composable
-fun AssembliesSection(
-    assemblies: List<Assembly>,
-    onAssembliesChange: (List<Assembly>) -> Unit
-) {
-    Column {
-        assemblies.forEachIndexed { i, asm ->
-            AssemblyCard(
-                asm
-            ) { newAsm ->
-                onAssembliesChange(
-                    assemblies.toMutableList().apply { this[i] = newAsm }
-                )
-            }
-            if (i < assemblies.lastIndex) {
-                Spacer(Modifier.height(10.dp))
-            }
-        }
-    }
-}
-
-@Composable
-fun AssemblyCard(
-    assembly: Assembly,
-    onAssemblyChange: (Assembly) -> Unit
-) {
-    OutlinedCard(Modifier.width(550.dp)) {
-        Column(Modifier.padding(10.dp)) {
-            Text(assembly.name)
-
-            CheckBox(
-                checked = assembly.included,
-                onCheckedChange = { onAssemblyChange(Assembly(assembly.name, it, assembly.publicized)) }
-            ) {
-                Text("Enable")
-            }
-
-            CheckBox(
-                checked = assembly.publicized,
-                onCheckedChange = { onAssemblyChange(Assembly(assembly.name, assembly.included, it)) },
-                enabled = assembly.included
-            ) {
-                Text("Publicized")
-            }
         }
     }
 }
