@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,11 +28,16 @@ fun App() {
     var projectAuthor by remember { mutableStateOf("") }
     var gameVersionSupportRange by remember { mutableStateOf("*") }
     var version by remember { mutableStateOf("0.0.1") }
+    var shifterVersion by remember { mutableStateOf("0.10.0") }
     var affectsSavegames by remember { mutableStateOf(false) }
     var disablesAchievements by remember { mutableStateOf(false) }
     var langVersion by remember { mutableStateOf(12) }
-    var modDependencies by remember { mutableStateOf(getDefaultDependencies()) }
+    var modDependencies by remember { mutableStateOf(getDefaultDependencies(shifterVersion)) }
     var assemblies by remember { mutableStateOf(getDefaultAssemblies()) }
+
+    LaunchedEffect(Unit) {
+        version = getShifterVersion() ?: version
+    }
 
     MaterialTheme {
         Surface(Modifier.fillMaxSize().padding(15.dp)) {
@@ -45,11 +51,8 @@ fun App() {
                         gameVersionSupportRange = gameVersionSupportRange,
                         affectsSavegames = affectsSavegames,
                         disablesAchievements = disablesAchievements,
-                        onProjectIdChange = { projectId = it },
-                        onProjectTitleChange = {
-                            projectTitle = it
-                            projectId = it.removeWhitespace()
-                        },
+                        onProjectIdChange = { projectId = it.removeWhitespace() },
+                        onProjectTitleChange = { projectTitle = it },
                         onProjectDescriptionChange = { projectDescription = it },
                         onProjectAuthorChange = { projectAuthor = it },
                         onGameVersionChange = { gameVersionSupportRange = it },
