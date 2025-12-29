@@ -40,7 +40,7 @@ fun genAndDownloadZip(
         )
     )
     zip.file("translations.json", getTranslationsFile())
-    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modDependencies[0].ModTitle == "ShapezShifter"))
+    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modDependencies[0].ModId == "steam:3542611357"))
     zip.file("$projectId.sln", genSolutionFile(projectId))
     zip.file("Steam/base.vdf", genVdfFile(projectTitle, projectDescription))
     zip.file("Steam/SteamPublishLinux.sh", steamScriptLinux)
