@@ -21,7 +21,7 @@ jobs:
         run: chmod +x ./gradlew && ./gradlew composeApp:wasmJsBrowserDistribution
       - uses: actions/upload-artifact@v6
         with:
-          name: unsigned-debug-tech
+          name: build
           path: composeApp/build/dist/wasmJs/productionExecutable/
           if-no-files-found: error
           overwrite: true
