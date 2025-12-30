@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.serialization)
     alias(libs.plugins.composeCompiler)
 }
 
@@ -24,12 +23,12 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.kotlinx.serialization.json)
             implementation(libs.compose.material.icons)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.contentNegotiation)
             implementation(libs.ktor.serialization.json)
+            implementation(libs.ktor.serialization.protobuf)
             implementation(projects.shared)
         }
     }

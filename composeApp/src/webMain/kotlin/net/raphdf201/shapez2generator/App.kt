@@ -39,9 +39,11 @@ fun App() {
     var langVersion by remember { mutableStateOf(12) }
     var modDependencies by remember { mutableStateOf(getDefaultDependencies(shifterVersion)) }
     var assemblies by remember { mutableStateOf(defaultAssemblies) }
+    var steamWorkshopItems by remember { mutableStateOf(listOf<WorkshopItem>()) }
 
     LaunchedEffect(Unit) {
         version = getShifterVersion() ?: version
+        steamWorkshopItems = getWorkshopItems() ?: steamWorkshopItems
     }
 
     MaterialTheme {

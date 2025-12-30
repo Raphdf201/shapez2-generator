@@ -3,8 +3,13 @@ package net.raphdf201.shapez2generator
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.serialization.kotlinx.protobuf.protobuf
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
+
+const val ghReleasesApiUrl = "https://api.github.com/repos/tobspr-games/shapez2-shifter/releases/latest"
+const val backendUrl = "https://shapez2-generatorapi.raphdf201.net"
 
 val defaultAssemblies = listOf(
     Assembly("Core.dll", true, false),
@@ -42,16 +47,10 @@ val defaultAssemblies = listOf(
     Assembly("UnityEngine.CoreModule.dll", true, false),
 )
 
-val prettyJson = Json {
-    prettyPrint = true
-}
-
-val notStrictJson = Json {
-    ignoreUnknownKeys = true
-}
-
+@OptIn(ExperimentalSerializationApi::class)
 val client = HttpClient {
     install(ContentNegotiation) {
         json(notStrictJson)
+        protobuf()
     }
 }
