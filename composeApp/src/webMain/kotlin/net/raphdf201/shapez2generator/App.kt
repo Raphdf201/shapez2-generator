@@ -69,7 +69,10 @@ fun App() {
                         onProjectIdChange = { projectId = it.removeWhitespace() },
                         onProjectTitleChange = { projectTitle = it },
                         onProjectDescriptionChange = { projectDescription = it },
-                        onProjectAuthorChange = { projectAuthor = it; publishingSteamUsername = it },
+                        onProjectAuthorChange = {
+                            if (projectAuthor == publishingSteamUsername) publishingSteamUsername = it
+                            projectAuthor = it
+                                                },
                         onPublishingSteamUsernameChange = { publishingSteamUsername = it },
                         onGameVersionChange = { gameVersionSupportRange = it },
                         onAffectsSavegamesChange = { affectsSavegames = it },
