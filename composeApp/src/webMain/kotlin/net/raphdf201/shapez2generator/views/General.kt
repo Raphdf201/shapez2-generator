@@ -1,11 +1,20 @@
 package net.raphdf201.shapez2generator.views
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.Button
@@ -13,16 +22,21 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.fileBuilders.ManifestDependency
 import net.raphdf201.shapez2generator.fileBuilders.genAndDownloadCsproj
 import net.raphdf201.shapez2generator.fileBuilders.genAndDownloadZip
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun CheckBox(
@@ -188,6 +202,48 @@ fun ActionButtons(
         ) {
             Text("Download .csproj only")
             Icon(Icons.Default.Download, null)
+        }
+    }
+}
+
+@Composable
+fun IconToggle(
+    selectedIndex: Int,
+    onSelectionChanged: (Int) -> Unit,
+    icons: List<DrawableResource>,
+    modifier: Modifier = Modifier,
+    selectedColor: Color = MaterialTheme.colorScheme.primary,
+    unselectedColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    iconTint: Color = MaterialTheme.colorScheme.onSurface
+) {
+    Row(
+        modifier
+            .height(30.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(unselectedColor),
+    ) {
+        icons.forEachIndexed { i, icon ->
+            Box(
+                Modifier
+                    .weight(1f)
+                    .background(
+                        if (selectedIndex == i) selectedColor else Color.Transparent
+                    )
+                    .clickable { onSelectionChanged(i) }
+                    .padding(1.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = "Option ${i + 1}",
+                    tint = if (selectedIndex == i) {
+                        Color.White
+                    } else {
+                        iconTint.copy(alpha = 0.6f)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }
