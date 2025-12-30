@@ -30,6 +30,7 @@ fun AssembliesSection(
     onAssembliesChange: (List<Assembly>) -> Unit
 ) {
     Column {
+        Text("Assemblies")
         assemblies.forEachIndexed { i, asm ->
             AssemblyCard(
                 asm

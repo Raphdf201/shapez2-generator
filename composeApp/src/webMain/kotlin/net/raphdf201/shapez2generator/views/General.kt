@@ -76,6 +76,7 @@ fun ProjectInfoSection(
     onUseNewSolutionFormatChange: (Boolean) -> Unit
 ) {
     Column {
+        Text("Info")
         TextField(
             value = projectId,
             onValueChange = onProjectIdChange,
