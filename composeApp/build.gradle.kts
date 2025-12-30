@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.contentNegotiation)
             implementation(libs.ktor.serialization.json)
+            implementation(projects.shared)
         }
     }
 }
