@@ -25,16 +25,55 @@
 </div>
 
 <script>
+    // Function to hide splash screen
+    // 100% claude vibecode btw (i hate js)
+    function hideSplash() {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+            splash.classList.add('hidden');
+            setTimeout(function() {
+                splash.remove();
+            }, 600);
+        }
+    }
+
+    // Poll for Compose app initialization
+    function checkComposeReady() {
+        // Method 1: Check for canvas element (Compose usually creates a canvas)
+        const canvas = document.querySelector('canvas');
+        
+        // Method 2: Check for a specific root div that Compose creates
+        const composeRoot = document.getElementById('root') || document.querySelector('[data-compose-root]');
+        
+        // Method 3: Check if the skiko wasm module is loaded
+        const wasmLoaded = typeof window.skia !== 'undefined' || 
+                          typeof window.wasmExports !== 'undefined' ||
+                          document.querySelector('canvas[data-skiko-canvas]');
+        
+        if (canvas || composeRoot || wasmLoaded) {
+            console.log('Compose app detected as ready');
+            setTimeout(hideSplash, 500);
+            return true;
+        }
+        return false;
+    }
+
+    // Start polling after DOM is ready
     window.addEventListener('load', function() {
-        setTimeout(function() {
-            const splash = document.getElementById('splash-screen');
-            if (splash) {
-                splash.classList.add('hidden');
-                setTimeout(function() {
-                    splash.remove();
-                }, 600);
+        let attempts = 0;
+        const maxAttempts = 100; // 10 seconds max (100 * 100ms)
+        
+        const pollInterval = setInterval(function() {
+            attempts++;
+            
+            if (checkComposeReady()) {
+                clearInterval(pollInterval);
+            } else if (attempts >= maxAttempts) {
+                console.warn('Splash screen timeout - hiding anyway');
+                clearInterval(pollInterval);
+                hideSplash();
             }
-        }, 500);
+        }, 100); // Check every 100ms
     });
 </script>
 </body>
