@@ -1,5 +1,7 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
+import net.raphdf201.shapez2generator.Manifest
+import net.raphdf201.shapez2generator.ManifestDependency
 import net.raphdf201.shapez2generator.npm.createZip
 import net.raphdf201.shapez2generator.npm.createZipOptions
 import net.raphdf201.shapez2generator.npm.saveAs

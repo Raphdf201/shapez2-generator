@@ -5,6 +5,9 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.plugins.compression.Compression
+import io.ktor.server.plugins.compression.gzip
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
@@ -30,6 +33,9 @@ fun Application.v1Routes() {
         route("/v1") {
             route("/item") {
                 get("/list") {
+                    install(Compression) {
+                        gzip()
+                    }
                     val newList = Json.parseToJsonElement(client.get(IPublishedFileService.url) {
                         url {
                             parameters.append("key", apikey)

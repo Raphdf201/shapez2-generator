@@ -17,7 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import net.raphdf201.shapez2generator.fileBuilders.ManifestDependency
+import net.raphdf201.shapez2generator.ManifestDependency
 import org.jetbrains.compose.resources.painterResource
 import shapez2_generator.composeapp.generated.resources.Res
 import shapez2_generator.composeapp.generated.resources.minus_svgrepo_com

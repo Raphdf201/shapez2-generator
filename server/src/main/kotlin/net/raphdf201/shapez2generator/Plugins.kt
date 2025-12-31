@@ -15,7 +15,4 @@ fun Application.plugins() {
         protobuf()
     }
     install(XForwardedHeaders)
-    install(Compression) {
-        gzip()
-    }
 }
