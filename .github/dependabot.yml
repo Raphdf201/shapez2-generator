@@ -9,10 +9,6 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-  - package-ecosystem: "gradle"
-    directory: "/composeApp/" # Location of package manifests
-    schedule:
-      interval: "weekly"
   - package-ecosystem: "github-actions"
     directory: "/" # Location of package manifests
     schedule:

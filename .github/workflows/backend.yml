@@ -1,6 +1,14 @@
-name: Build
+name: Build backend
 
-on: push
+on:
+  push:
+    paths:
+      - "server/**"
+      - "shared/**"
+      - "gradle/libs.versions.toml"
+      - "build.gradle.kts"
+      - "gradle.properties"
+      - "settings.gradle.kts"
 
 jobs:
   build:
@@ -18,10 +26,11 @@ jobs:
         with:
           cache-disabled: false
       - name: Build
-        run: chmod +x ./gradlew && ./gradlew composeApp:wasmJsBrowserDistribution
+        run: chmod +x ./gradlew && ./gradlew server:buildFatJar
       - uses: actions/upload-artifact@v6
         with:
-          name: build
-          path: composeApp/build/dist/wasmJs/productionExecutable/
+          name: jar
+            path: server/build/libs/server-all.jar
           if-no-files-found: error
           overwrite: true
+  
