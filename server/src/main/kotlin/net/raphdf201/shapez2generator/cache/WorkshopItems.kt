@@ -57,15 +57,22 @@ private suspend fun downloadItem(id: UInt) {
                 ).redirectErrorStream(true).start()
             }
 
-            val exitCode = withContext(Dispatchers.IO) {
-                process.waitFor()
+            val output = withContext(Dispatchers.IO) {
+                val exitCode = process.waitFor()
+                val result = process.inputStream.bufferedReader().use { it.readText() }
+
+                // Ensure all streams are closed
+                process.inputStream.close()
+                process.outputStream.close()
+                process.errorStream.close()
+
+                exitCode to result
             }
 
+            val (exitCode, outputText) = output
+
             if (exitCode != 0) {
-                val output = withContext(Dispatchers.IO) {
-                    process.inputStream.bufferedReader().readText()
-                }
-                throw Exception("SteamCMD failed (exit $exitCode): $output")
+                throw Exception("SteamCMD failed (exit $exitCode): $outputText")
             }
             return
         } catch (e: Exception) {
