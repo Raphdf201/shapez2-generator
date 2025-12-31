@@ -18,7 +18,7 @@ import net.raphdf201.shapez2generator.cache.CachedWorkshopItem
 import net.raphdf201.shapez2generator.SimpleWorkshopItem
 import net.raphdf201.shapez2generator.apikey
 import net.raphdf201.shapez2generator.client
-import net.raphdf201.shapez2generator.database.db
+import net.raphdf201.shapez2generator.db
 import net.raphdf201.shapez2generator.cache.getWorkshopItem
 import net.raphdf201.shapez2generator.cache.shouldUpdateSteamList
 import net.raphdf201.shapez2generator.prettyJson
@@ -57,7 +57,8 @@ fun Application.v1Routes() {
                         }
                     }
                     if (shouldUpdateSteamList()) updateSteamItemList(steamItemListTmp)
-                    call.respond(simpleList.toList())
+                    call.respondText(prettyJson.encodeToString(simpleList), ContentType.Application.Json)
+                    // TODO : call.respond(simpleList)
                 }
                 get("/{id}") {
                     val id = call.pathParameters["id"]?.toUIntOrNull()

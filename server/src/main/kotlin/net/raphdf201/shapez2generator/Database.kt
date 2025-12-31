@@ -1,9 +1,5 @@
-package net.raphdf201.shapez2generator.database
+package net.raphdf201.shapez2generator
 
-import net.raphdf201.shapez2generator.DbWorkshopItem
-import net.raphdf201.shapez2generator.dbPassword
-import net.raphdf201.shapez2generator.dbUrl
-import net.raphdf201.shapez2generator.dbUser
 import org.jetbrains.exposed.v1.core.Table
 import org.jetbrains.exposed.v1.core.VarCharColumnType
 import org.jetbrains.exposed.v1.core.eq
@@ -36,25 +32,27 @@ class DbService(db: Database) {
         val steamName = varchar("steamtitle", 128)
         val dlls = array("dlls", VarCharColumnType())
         val latestVersion = varchar("latestversion", 32)
-
+        // if schema changes, uncomment init
         override val primaryKey = PrimaryKey(id)
     }
 
-    init {
+    /*init {
         transaction(db) {
-            SchemaUtils.drop(WorkshopItems)// TODO : NEVER LET THIS IN PRODUCTION
+            SchemaUtils.drop(WorkshopItems)
             SchemaUtils.create(WorkshopItems)
         }
-    }
+    }*/
 
     suspend fun create(item: DbWorkshopItem) = suspendTransaction {
         WorkshopItems.insert {
+            it[id] = item.id
             it[lastSteamUpdate] = item.lastSteamUpdate
             it[lastLocalUpdate] = item.lastLocalUpdate
             it[manifName] = item.manifestName
+            it[steamName] = item.steamName
             it[dlls] = item.dlls
             it[latestVersion] = item.latestVersion
-        }[WorkshopItems.id]
+        }
     }
 
     suspend fun createAndGet(item: DbWorkshopItem): DbWorkshopItem {

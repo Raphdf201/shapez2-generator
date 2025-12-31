@@ -7,7 +7,6 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.ExperimentalSerializationApi
 import net.raphdf201.shapez2generator.api.v1Routes
-import net.raphdf201.shapez2generator.database.database
 import java.io.File
 
 fun main() {

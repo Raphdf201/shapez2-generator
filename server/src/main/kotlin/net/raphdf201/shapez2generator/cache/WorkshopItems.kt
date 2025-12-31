@@ -5,7 +5,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.raphdf201.shapez2generator.DbWorkshopItem
 import net.raphdf201.shapez2generator.Manifest
-import net.raphdf201.shapez2generator.database.db
+import net.raphdf201.shapez2generator.db
 import net.raphdf201.shapez2generator.notStrictJson
 import net.raphdf201.shapez2generator.steamPassword
 import net.raphdf201.shapez2generator.steamUser
