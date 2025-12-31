@@ -14,15 +14,16 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import net.raphdf201.shapez2generator.CachedWorkshopItem
+import net.raphdf201.shapez2generator.cache.CachedWorkshopItem
 import net.raphdf201.shapez2generator.SimpleWorkshopItem
 import net.raphdf201.shapez2generator.apikey
 import net.raphdf201.shapez2generator.client
 import net.raphdf201.shapez2generator.database.db
-import net.raphdf201.shapez2generator.getItem
+import net.raphdf201.shapez2generator.cache.getWorkshopItem
+import net.raphdf201.shapez2generator.cache.shouldUpdateSteamList
 import net.raphdf201.shapez2generator.prettyJson
 import net.raphdf201.shapez2generator.steam.IPublishedFileService
-import net.raphdf201.shapez2generator.steamItemList
+import net.raphdf201.shapez2generator.cache.updateSteamItemList
 
 fun Application.v1Routes() {
     routing {
@@ -55,14 +56,23 @@ fun Application.v1Routes() {
                             ))
                         }
                     }
-                    steamItemList = steamItemListTmp
+                    if (shouldUpdateSteamList()) updateSteamItemList(steamItemListTmp)
                     call.respond(simpleList.toList())
                 }
                 get("/{id}") {
-                    val id = call.pathParameters["id"]?.toUInt() ?: return@get call.respond(HttpStatusCode.BadRequest)
-                    val title = call.queryParameters["name"] ?: return@get call.respond(HttpStatusCode.BadRequest)
-                    val item = db.read(id) ?: db.createAndGet(getItem(id, title))
-                    call.respondText(prettyJson.encodeToString(item), ContentType.Application.Json)
+                    val id = call.pathParameters["id"]?.toUIntOrNull()
+                        ?: return@get call.respond(HttpStatusCode.BadRequest, "Invalid ID")
+                    val title = call.queryParameters["name"]
+                        ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing title")
+                    try {
+                        val item = db.read(id) ?: db.createAndGet(getWorkshopItem(id, title))
+                        call.respondText(prettyJson.encodeToString(item), ContentType.Application.Json)
+                        // TODO : call.respond(item)
+                    } catch (e: IllegalArgumentException) {
+                        call.respond(HttpStatusCode.NotFound, e.message ?: "Item not found")
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.InternalServerError, "Failed to fetch : ${e.message}")
+                    }
                 }
             }
         }
