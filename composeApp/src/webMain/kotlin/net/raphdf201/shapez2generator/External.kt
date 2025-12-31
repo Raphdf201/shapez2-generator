@@ -18,8 +18,8 @@ suspend fun getShifterVersion(): String? = try {
     null
 }
 
-suspend fun getWorkshopItems(): List<WorkshopItem>? = try {
-    client.get("$backendUrl/v1/getItems").body<List<WorkshopItem>>()
+suspend fun getWorkshopItems(): List<SimpleWorkshopItem>? = try {
+    client.get("$backendUrl/v1/getItems").body<List<SimpleWorkshopItem>>()
 } catch (_: Exception) {
     null
 }

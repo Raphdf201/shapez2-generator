@@ -2,14 +2,12 @@ package net.raphdf201.shapez2generator
 
 import io.ktor.client.HttpClient
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.serialization.kotlinx.protobuf.protobuf
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.application.Application
-import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.ExperimentalSerializationApi
 import net.raphdf201.shapez2generator.api.v1Routes
+import net.raphdf201.shapez2generator.database.database
 import java.io.File
 
 fun main() {
@@ -19,9 +17,8 @@ fun main() {
 
 @OptIn(ExperimentalSerializationApi::class)
 fun Application.module() {
-    install(ContentNegotiation) {
-        protobuf()
-    }
+    this.plugins()
+    database()
     this.routing()
     this.v1Routes()
 }
@@ -32,6 +29,6 @@ val client = HttpClient {
     }
 }
 
-val apiKey by lazy {
-    File("apikey").readLines().first()
+val config by lazy {
+    File("config").readLines()
 }
