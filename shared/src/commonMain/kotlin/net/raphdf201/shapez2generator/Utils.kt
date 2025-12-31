@@ -10,3 +10,11 @@ fun prettifyJson(jsonString: String): String {
         jsonString
     }
 }
+
+fun DbWorkshopItem.toSharedWorkshopItem(): SharedWorkshopItem = SharedWorkshopItem(
+    this.id,
+    this.manifestName,
+    this.steamName,
+    this.dlls,
+    this.latestVersion
+)

@@ -1,8 +1,11 @@
 package net.raphdf201.shapez2generator.database
 
-import net.raphdf201.shapez2generator.WorkshopItem
-import net.raphdf201.shapez2generator.config
+import net.raphdf201.shapez2generator.DbWorkshopItem
+import net.raphdf201.shapez2generator.dbPassword
+import net.raphdf201.shapez2generator.dbUrl
+import net.raphdf201.shapez2generator.dbUser
 import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.core.VarCharColumnType
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
@@ -17,18 +20,21 @@ lateinit var db: DbService
 
 fun database() {
     db = DbService(Database.connect(
-        url = "jdbc:postgresql://${config[1]}",
+        url = "jdbc:postgresql://${dbUrl}",
         driver = "org.postgresql.Driver",
-        user = config[2],
-        password = config[3]
+        user = dbUser,
+        password = dbPassword
     ))
 }
 
 class DbService(db: Database) {
     object WorkshopItems : Table("workshop_items") {
         val id = uinteger("id").uniqueIndex()
-        val title = varchar("title", 128)
-        val dllName = varchar("dllname", 128)
+        val lastSteamUpdate = long("laststeamupdate")
+        val lastLocalUpdate = long("lastlocalupdate")
+        val manifName = varchar("maniftitle", 128)
+        val steamName = varchar("steamtitle", 128)
+        val dlls = array("dlls", VarCharColumnType())
         val latestVersion = varchar("latestversion", 32)
 
         override val primaryKey = PrimaryKey(id)
@@ -41,41 +47,43 @@ class DbService(db: Database) {
         }
     }
 
-    suspend fun create(item: WorkshopItem) = suspendTransaction {
+    suspend fun create(item: DbWorkshopItem) = suspendTransaction {
         WorkshopItems.insert {
-            it[title] = item.title
-            it[dllName] = item.dllName
+            it[lastSteamUpdate] = item.lastSteamUpdate
+            it[lastLocalUpdate] = item.lastLocalUpdate
+            it[manifName] = item.manifestName
+            it[dlls] = item.dlls
             it[latestVersion] = item.latestVersion
         }[WorkshopItems.id]
     }
 
-    suspend fun createAndGet(item: WorkshopItem): WorkshopItem {
-        suspendTransaction {
-            WorkshopItems.insert {
-                it[title] = item.title
-                it[dllName] = item.dllName
-                it[latestVersion] = item.latestVersion
-            }[WorkshopItems.id]
-        }
+    suspend fun createAndGet(item: DbWorkshopItem): DbWorkshopItem {
+        create(item)
         return item
     }
 
-    suspend fun read(id: UInt): WorkshopItem? = suspendTransaction {
+    suspend fun read(id: UInt): DbWorkshopItem? = suspendTransaction {
         WorkshopItems.selectAll()
             .where { WorkshopItems.id eq id }
-            .map { WorkshopItem(
+            .map { DbWorkshopItem(
                 it[WorkshopItems.id],
-                it[WorkshopItems.title],
-                it[WorkshopItems.dllName],
-                it[WorkshopItems.latestVersion]
+                it[WorkshopItems.lastSteamUpdate],
+                it[WorkshopItems.lastLocalUpdate],
+                it[WorkshopItems.manifName],
+                it[WorkshopItems.steamName],
+                it[WorkshopItems.dlls],
+                it[WorkshopItems.latestVersion],
             ) }
             .singleOrNull()
     }
 
-    suspend fun update(item: WorkshopItem) = suspendTransaction {
+    suspend fun update(item: DbWorkshopItem) = suspendTransaction {
         WorkshopItems.update({ WorkshopItems.id eq item.id }) {
-            it[title] = item.title
-            it[dllName] = item.dllName
+            it[lastSteamUpdate] = item.lastSteamUpdate
+            it[lastLocalUpdate] = item.lastLocalUpdate
+            it[manifName] = item.manifestName
+            it[steamName] = item.steamName
+            it[dlls] = item.dlls
             it[latestVersion] = item.latestVersion
         }
     }

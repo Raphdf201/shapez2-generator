@@ -29,6 +29,11 @@ val client = HttpClient {
     }
 }
 
-val config by lazy {
-    File("config").readLines()
-}
+private val config = File("config").readLines()
+val apikey = config[0]
+val dbUrl = config[1]
+val dbUser = config[2]
+val dbPassword = config[3]
+val workshopDownloadPath = config[4]
+val steamUser = config[5]
+val steamPassword = config[6]
