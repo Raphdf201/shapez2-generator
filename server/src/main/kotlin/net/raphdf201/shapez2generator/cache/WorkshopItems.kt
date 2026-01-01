@@ -52,7 +52,7 @@ private suspend fun downloadItem(id: UInt) {
             val process = withContext(Dispatchers.IO) {
                 ProcessBuilder(
                     "steamcmd",
-                    "+login", steamUser, steamPassword,
+                    "+login", steamUser,// steamPassword,
                     "+workshop_download_item", "2162800", id.toString(),
                     "+quit"
                 ).redirectErrorStream(true).start()
