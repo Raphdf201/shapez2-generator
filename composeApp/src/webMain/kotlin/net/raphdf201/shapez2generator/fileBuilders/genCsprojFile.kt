@@ -1,11 +1,10 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
 import net.raphdf201.shapez2generator.ManifestDependency
-import net.raphdf201.shapez2generator.npm.createZip
-import net.raphdf201.shapez2generator.npm.createZipOptions
+import net.raphdf201.shapez2generator.npm.createTextBlob
 import net.raphdf201.shapez2generator.npm.saveAs
 
-fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly>, shapezShifter: Boolean): String {
+fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly>, modAssemblies: List<Assembly>, shapezShifter: Boolean): String {
     val publicizedItems = assemblies
         .filter { it.publicized && it.included }.joinToString("\n") {
             """
@@ -17,8 +16,16 @@ fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly
     val includedAssemblies = assemblies
         .filter { it.included }.joinToString("\n") {
             """
-        <Reference Include="${it.name.dropLast(4)}">
+        <Reference Include="${it.name.removeSuffix(".dll")}">
             <HintPath>$(SPZ2_PATH)\${it.name}</HintPath>
+            <Private>False</Private>
+        </Reference>"""
+        }
+
+    val modAsms = modAssemblies.joinToString("\n") {
+            """
+        <Reference Include="${it.name.removeSuffix(".dll")}">
+            <HintPath>$(SPZ2_PERSISTEMT)\mods\${it.name}\${it.name}</HintPath>
             <Private>False</Private>
         </Reference>"""
         }
@@ -74,6 +81,7 @@ fun genCsprojFile(projectId: String, langVersion: Int, assemblies: List<Assembly
     <ItemGroup>
         $spzShifter
         $includedAssemblies
+        $modAsms
     </ItemGroup>
 </Project>
 """
@@ -83,16 +91,12 @@ fun genAndDownloadCsproj(
     projectId: String,
     langVersion: Int,
     modDependencies: List<ManifestDependency>,
-    assemblies: List<Assembly>
+    assemblies: List<Assembly>,
+    modAssemblies: List<Assembly>,
 ) {
-
-    val zip = createZip()
-
-    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modDependencies[0].ModTitle == "ShapezShifter"))
-
-    val blob = zip.generate(createZipOptions())
-
-    saveAs(blob, "$projectId.zip")
+    val csprojContent = genCsprojFile(projectId, langVersion, assemblies, modAssemblies, modDependencies[0].ModTitle == "ShapezShifter")
+    val blob = createTextBlob(csprojContent)
+    saveAs(blob, "$projectId.csproj")
 }
 
 data class Assembly(

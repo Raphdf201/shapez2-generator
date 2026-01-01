@@ -2,14 +2,9 @@ package net.raphdf201.shapez2generator.api
 
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
-import io.ktor.server.application.install
-import io.ktor.server.plugins.compression.Compression
-import io.ktor.server.plugins.compression.gzip
 import io.ktor.server.response.respond
-import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
@@ -24,7 +19,6 @@ import net.raphdf201.shapez2generator.client
 import net.raphdf201.shapez2generator.db
 import net.raphdf201.shapez2generator.cache.getWorkshopItem
 import net.raphdf201.shapez2generator.cache.shouldUpdateSteamList
-import net.raphdf201.shapez2generator.prettyJson
 import net.raphdf201.shapez2generator.steam.IPublishedFileService
 import net.raphdf201.shapez2generator.cache.updateSteamItemList
 
@@ -33,9 +27,6 @@ fun Application.v1Routes() {
         route("/v1") {
             route("/item") {
                 get("/list") {
-                    install(Compression) {
-                        gzip()
-                    }
                     val newList = Json.parseToJsonElement(client.get(IPublishedFileService.url) {
                         url {
                             parameters.append("key", apikey)
@@ -63,8 +54,7 @@ fun Application.v1Routes() {
                         }
                     }
                     if (shouldUpdateSteamList()) updateSteamItemList(steamItemListTmp)
-                    call.respondText(prettyJson.encodeToString(simpleList), ContentType.Application.Json)
-                    // TODO : call.respond(simpleList)
+                    call.respond(simpleList)
                 }
                 get("/{id}") {
                     val id = call.pathParameters["id"]?.toUIntOrNull()
@@ -73,8 +63,7 @@ fun Application.v1Routes() {
                         ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing title")
                     try {
                         val item = db.read(id) ?: db.createAndGet(getWorkshopItem(id, title))
-                        call.respondText(prettyJson.encodeToString(item), ContentType.Application.Json)
-                        // TODO : call.respond(item)
+                        call.respond(item)
                     } catch (e: IllegalArgumentException) {
                         call.respond(HttpStatusCode.NotFound, e.message ?: "Item not found")
                     } catch (e: Exception) {

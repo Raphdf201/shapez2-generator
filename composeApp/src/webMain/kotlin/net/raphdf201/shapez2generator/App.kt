@@ -14,17 +14,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.views.ActionButtons
 import net.raphdf201.shapez2generator.views.AssembliesSection
 import net.raphdf201.shapez2generator.views.DependenciesSection
 import net.raphdf201.shapez2generator.views.ProjectInfoSection
 
+@OptIn(ExperimentalWasmJsInterop::class)
 @Composable
 fun App() {
+    val scope = rememberCoroutineScope()
     var projectId by remember { mutableStateOf("") }
     var projectTitle by remember { mutableStateOf("") }
     var projectDescription by remember { mutableStateOf("") }
@@ -39,6 +44,7 @@ fun App() {
     var langVersion by remember { mutableStateOf(12) }
     var modDependencies by remember { mutableStateOf(getDefaultDependencies(shifterVersion)) }
     var assemblies by remember { mutableStateOf(defaultAssemblies) }
+    var modAssemblies by remember { mutableStateOf(listOf<Assembly>()) }
     var steamSimpleWorkshopItems by remember { mutableStateOf(listOf<SimpleWorkshopItem>()) }
 
     LaunchedEffect(Unit) {
@@ -55,8 +61,8 @@ fun App() {
                     .padding(bottom = 60.dp)
             ) {
                 FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(spacing),
+                    verticalArrangement = Arrangement.spacedBy(spacing)
                 ) {
                     ProjectInfoSection(
                         projectId = projectId,
@@ -84,7 +90,23 @@ fun App() {
 
                     DependenciesSection(
                         dependencies = modDependencies,
-                        onDependenciesChange = { modDependencies = it }
+                        onDependenciesChange = { modDependencies = it },
+                        steamDependencies = steamSimpleWorkshopItems,
+                        onSteamDependencySelect = {
+                            scope.launch {
+                                val dep = (steamSimpleWorkshopItems[it].get() ?: return@launch).processExceptions()
+                                val tmpAssemblies = mutableListOf<Assembly>()
+                                dep.dlls.forEach { asmName ->
+                                    tmpAssemblies.add(Assembly(asmName, true, false))
+                                }
+                                modAssemblies += tmpAssemblies
+                                modDependencies += ManifestDependency(
+                                    "steam:${dep.id}",
+                                    dep.manifestName,
+                                    "^${dep.latestVersion}"
+                                )
+                            }
+                        }
                     )
 
                     AssembliesSection(
@@ -108,7 +130,8 @@ fun App() {
                 useNewSolutionFormat,
                 langVersion,
                 modDependencies,
-                assemblies
+                assemblies,
+                modAssemblies
             )
         }
     }

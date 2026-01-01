@@ -2,6 +2,7 @@ package net.raphdf201.shapez2generator.fileBuilders
 
 import net.raphdf201.shapez2generator.Manifest
 import net.raphdf201.shapez2generator.ManifestDependency
+import net.raphdf201.shapez2generator.ModIds
 import net.raphdf201.shapez2generator.npm.createZip
 import net.raphdf201.shapez2generator.npm.createZipOptions
 import net.raphdf201.shapez2generator.npm.saveAs
@@ -19,7 +20,8 @@ fun genAndDownloadZip(
     useNewSolutionFormat: Boolean,
     langVersion: Int,
     modDependencies: List<ManifestDependency>,
-    assemblies: List<Assembly>
+    assemblies: List<Assembly>,
+    modAssemblies: List<Assembly>
 ) {
 
     val zip = createZip()
@@ -44,7 +46,8 @@ fun genAndDownloadZip(
         )
     )
     zip.file("README.md", genReadme(projectTitle))
-    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modDependencies[0].ModId == "steam:3542611357"))
+    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modAssemblies,
+        modDependencies.any { it.ModId.endsWith(ModIds.ShapezShifter) }))
     zip.file(if (useNewSolutionFormat) "$projectId.slnx" else "$projectId.sln", genSolutionFile(projectId, useNewSolutionFormat))
     zip.file("Steam/base.vdf", genVdfFile(projectTitle, projectDescription))
     zip.file("Steam/SteamPublishLinux.sh", genLinuxSteamScript(steamUsername))

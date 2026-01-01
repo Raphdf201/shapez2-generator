@@ -18,3 +18,5 @@ fun DbWorkshopItem.toSharedWorkshopItem(): SharedWorkshopItem = SharedWorkshopIt
     this.dlls,
     this.latestVersion
 )
+
+fun String.removeWhitespace() = this.replace(" ", "")
