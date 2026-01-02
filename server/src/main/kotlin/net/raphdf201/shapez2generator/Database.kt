@@ -16,7 +16,7 @@ lateinit var db: DbService
 
 fun database() {
     db = DbService(Database.connect(
-        url = "jdbc:postgresql://${dbUrl}",
+        url = "jdbc:postgresql://$dbUrl",
         driver = "org.postgresql.Driver",
         user = dbUser,
         password = dbPassword
@@ -38,8 +38,7 @@ class DbService(db: Database) {
 
     /*init {
         transaction(db) {
-            SchemaUtils.drop(WorkshopItems)
-            SchemaUtils.create(WorkshopItems)
+            SchemaUtils.createMissingTablesAndColumns(WorkshopItems)
         }
     }*/
 
