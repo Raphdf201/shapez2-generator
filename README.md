@@ -1,3 +1,7 @@
+api things
+list items : https://www.raphdf201.net/shapez2-generator/api/v1/item/list
+get info about one item : https://www.raphdf201.net/shapez2-generator/api/v1/item/{id}?name=thing
+
 server config format : put a file named config in the working dir of the server
 
 ```
