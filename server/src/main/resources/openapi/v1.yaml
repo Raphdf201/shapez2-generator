@@ -1,0 +1,106 @@
+openapi: "3.1.0"
+info:
+  title: "shapez2-generator API"
+  description: "shapez2-generator API"
+  version: "1.0.0"
+servers:
+  - url: "https://www.raphdf201.net/shapez2-generator/api"
+paths:
+  /v1/item/{id}:
+    get:
+      description: "Gets info about a specific workshop item"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+        - name: "name"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Missing title"
+                Example#2:
+                  value: "Invalid ID"
+        "200":
+          description: "OK"
+          content:
+            'Application/json':
+              schema:
+                $ref: "#/components/schemas/DbWorkshopItem"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+  /v1/item/list:
+    get:
+      description: "Get a simplified list of workshop items"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'Application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SimpleWorkshopItem"
+components:
+  schemas:
+    DbWorkshopItem:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        lastSteamUpdate:
+          type: "integer"
+          format: "int64"
+        lastLocalUpdate:
+          type: "integer"
+          format: "int64"
+        manifestName:
+          type: "string"
+        steamName:
+          type: "string"
+        latestVersion:
+          type: "string"
+      required:
+        - "id"
+        - "lastSteamUpdate"
+        - "lastLocalUpdate"
+        - "manifestName"
+        - "steamName"
+        - "latestVersion"
+    SimpleWorkshopItem:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        steamName:
+          type: "string"
+      required:
+        - "id"
+        - "steamName"

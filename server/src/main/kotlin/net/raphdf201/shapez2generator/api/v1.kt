@@ -4,6 +4,7 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
+import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
@@ -25,6 +26,7 @@ import net.raphdf201.shapez2generator.cache.updateSteamItemList
 fun Application.v1Routes() {
     routing {
         route("/v1") {
+            swaggerUI("openapi", "openapi/v1.yaml")
             route("/item") {
                 get("/list") {
                     val newList = Json.parseToJsonElement(client.get(IPublishedFileService.url) {

@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.contentNegotiation)
     implementation(libs.ktor.server.forwardedHeaders)
+    implementation(libs.ktor.server.swagger)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.contentNegotiation)
