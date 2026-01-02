@@ -4,7 +4,7 @@ fun genVdfFile(projectTitle: String, projectDescription: String): String {
     return """"workshopitem"
 {
     "appid" "2162800"
-    "publishedfileid" "3542611357"
+    "publishedfileid" "0"
     "contentfolder" "${"$"}{CONTENT_PATH}"
     "previewfile" "${"$"}{PREVIEW_IMG}"
     "visibility" "0"
