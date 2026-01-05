@@ -74,7 +74,7 @@ fun App() {
                         affectsSavegames = affectsSavegames,
                         disablesAchievements = disablesAchievements,
                         useNewSolutionFormat = useNewSolutionFormat,
-                        onProjectIdChange = { projectId = it.removeWhitespace() },
+                        onProjectIdChange = { projectId = it.removeWhitespace().removeNonAlpha() },
                         onProjectTitleChange = { projectTitle = it },
                         onProjectDescriptionChange = { projectDescription = it },
                         onProjectAuthorChange = {
