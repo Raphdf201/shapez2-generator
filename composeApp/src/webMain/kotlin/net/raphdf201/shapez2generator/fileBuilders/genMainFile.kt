@@ -1,8 +1,8 @@
 package net.raphdf201.shapez2generator.fileBuilders
 
-fun genMainFile(projectId: String, loggerIncluded: Boolean): String {
+fun genMainFile(projectId: String, loggerIncluded: Boolean, shapezShifterIncluded: Boolean): String {
     return """${if (loggerIncluded) "using Core.Logging;" else ""}
-using ShapezShifter.Kit;
+${if (shapezShifterIncluded) "using ShapezShifter.Kit;" else ""}
 
 namespace $projectId;
 

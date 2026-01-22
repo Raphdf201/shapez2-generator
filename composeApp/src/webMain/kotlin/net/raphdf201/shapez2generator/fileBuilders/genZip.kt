@@ -23,10 +23,11 @@ fun genAndDownloadZip(
     assemblies: List<Assembly>,
     modAssemblies: List<Assembly>
 ) {
-
+    val shapezShifterIncluded = modDependencies.any { it.ModId.endsWith(ModIds.ShapezShifter) }
     val zip = createZip()
     zip.file(".gitignore", genGitignoreFile())
-    zip.file("Main.cs", genMainFile(projectId, assemblies.any { it.name == "Core.dll" }))
+    zip.file("Main.cs", genMainFile(projectId,
+        assemblies.any { it.name == "Core.dll" }, shapezShifterIncluded))
     zip.file(
         "manifest.json", genManifestFile(
             Manifest(
@@ -46,8 +47,8 @@ fun genAndDownloadZip(
         )
     )
     zip.file("README.md", genReadme(projectTitle))
-    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies, modAssemblies,
-        modDependencies.any { it.ModId.endsWith(ModIds.ShapezShifter) }))
+    zip.file("$projectId.csproj", genCsprojFile(projectId, langVersion, assemblies,
+        modAssemblies, shapezShifterIncluded))
     zip.file(if (useNewSolutionFormat) "$projectId.slnx" else "$projectId.sln", genSolutionFile(projectId, useNewSolutionFormat))
     zip.file("Steam/base.vdf", genVdfFile(projectTitle, projectDescription))
     zip.file("Steam/SteamPublishLinux.sh", genLinuxSteamScript(steamUsername))
