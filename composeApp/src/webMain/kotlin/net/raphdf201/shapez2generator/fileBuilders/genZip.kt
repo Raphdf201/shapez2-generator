@@ -26,7 +26,7 @@ fun genAndDownloadZip(
 
     val zip = createZip()
     zip.file(".gitignore", genGitignoreFile())
-    zip.file("Main.cs", genMainFile(projectId))
+    zip.file("Main.cs", genMainFile(projectId, assemblies.any { it.name == "Core.dll" }))
     zip.file(
         "manifest.json", genManifestFile(
             Manifest(
