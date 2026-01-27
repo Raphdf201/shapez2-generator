@@ -2,7 +2,7 @@
 androidx-lifecycle = "2.9.6"
 composeMultiplatform = "1.10.0"
 kotlin = "2.3.0"
-kotlinx-serialization = "1.9.0"
+kotlinx-serialization = "1.10.0"
 compose = "1.7.3"
 ktor = "3.4.0"
 logback = "1.5.25"
