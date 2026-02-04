@@ -19,7 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.views.ActionButtons
 import net.raphdf201.shapez2generator.views.AssembliesSection
@@ -48,8 +50,22 @@ fun App() {
     var steamSimpleWorkshopItems by remember { mutableStateOf(listOf<SimpleWorkshopItem>()) }
 
     LaunchedEffect(Unit) {
-        version = getShifterVersion() ?: version
-        steamSimpleWorkshopItems = getWorkshopItems() ?: steamSimpleWorkshopItems
+        withTimeout(5000) {
+            version = getShifterVersion() ?: version
+        }
+        launch {
+            try {
+                withTimeout(5000) { // 5 second timeout
+                    steamSimpleWorkshopItems = getWorkshopItems() ?: steamSimpleWorkshopItems
+                }
+            } catch (e: TimeoutCancellationException) {
+                println("Workshop items request timed out")
+                steamSimpleWorkshopItems = emptyList()
+            } catch (e: Exception) {
+                println("Failed to load workshop items: ${e.message}")
+                steamSimpleWorkshopItems = emptyList()
+            }
+        }
     }
 
     MaterialTheme {
