@@ -18,6 +18,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import net.raphdf201.shapez2generator.ManifestDependency
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
 import net.raphdf201.shapez2generator.fileBuilders.genAndDownloadCsproj
@@ -61,7 +62,7 @@ fun ProjectInfoSection(
     onDisablesAchievementsChange: (Boolean) -> Unit,
     onUseNewSolutionFormatChange: (Boolean) -> Unit
 ) {
-    Column {
+    Column(Modifier.width(280.dp)) {
         Text("Info")
         TextField(
             value = projectId,
