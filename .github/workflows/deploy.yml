@@ -1,5 +1,4 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+name: Deploy to gh pages
 
 on: workflow_dispatch
 
@@ -29,6 +28,8 @@ jobs:
           java-version: 21
       - name: setup gradle
         uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-disabled: true
       - name: Build
         run: chmod +x ./gradlew && ./gradlew composeApp:wasmJsBrowserDistribution
       - uses: actions/upload-pages-artifact@v3
