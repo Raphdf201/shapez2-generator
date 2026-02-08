@@ -7,7 +7,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import net.raphdf201.shapez2generator.fileBuilders.Assembly
 
 const val ghReleasesApiUrl = "https://api.github.com/repos/tobspr-games/shapez2-shifter/releases/latest"
-const val backendUrl = "https://www.raphdf201.net/shapez2-generator/api"// http://localhost:7000
+const val backendUrl = "https://shapez2api.raphdf201.net"// http://localhost:7000
 
 val defaultAssemblies = listOf(
     Assembly("Core.dll", true, false),
