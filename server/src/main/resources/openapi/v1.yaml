@@ -4,7 +4,7 @@ info:
   description: "shapez2-generator API"
   version: "1.0.0"
 servers:
-  - url: "https://www.raphdf201.net/shapez2-generator/api"
+  - url: "https://shapez2api.raphdf201.net"
 paths:
   /v1/item/{id}:
     get:

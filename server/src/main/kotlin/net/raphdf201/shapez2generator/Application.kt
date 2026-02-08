@@ -31,9 +31,6 @@ fun Application.module() {
         get("/") {
             call.respondRedirect("https://shapez2.raphdf201.net", true)
         }
-        get("/v1/openapi/v1.yaml") {
-            call.respondRedirect("/shapez2-generator/api/v1/openapi/v1.yaml")
-        }
     }
 }
 
