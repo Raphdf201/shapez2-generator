@@ -1,7 +1,6 @@
 package net.raphdf201.shapez2generator
 
 import io.ktor.client.HttpClient
-import io.ktor.http.HttpStatusCode
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -31,6 +30,9 @@ fun Application.module() {
     routing {
         get("/") {
             call.respondRedirect("https://shapez2.raphdf201.net", true)
+        }
+        get("/v1/openapi/v1.yaml") {
+            call.respondRedirect("/shapez2-generator/api/v1/openapi/v1.yaml")
         }
     }
 }
