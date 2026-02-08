@@ -8,7 +8,6 @@ import net.raphdf201.shapez2generator.Manifest
 import net.raphdf201.shapez2generator.db
 import net.raphdf201.shapez2generator.notStrictJson
 import net.raphdf201.shapez2generator.removeWhitespace
-import net.raphdf201.shapez2generator.steamPassword
 import net.raphdf201.shapez2generator.steamUser
 import net.raphdf201.shapez2generator.workshopDownloadPath
 import java.io.File
