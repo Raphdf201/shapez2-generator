@@ -1,3 +1,5 @@
+Better docs : [https://shapez2.raphdf201.net/](https://shapez2.raphdf201.net/)
+
 api things
 list items : https://www.raphdf201.net/shapez2-generator/api/v1/item/list
 get info about one item : https://www.raphdf201.net/shapez2-generator/api/v1/item/{id}?name=thing
