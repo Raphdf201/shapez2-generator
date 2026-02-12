@@ -58,7 +58,7 @@ fun App() {
                 withTimeout(5000) { // 5 second timeout
                     steamSimpleWorkshopItems = getWorkshopItems() ?: steamSimpleWorkshopItems
                 }
-            } catch (e: TimeoutCancellationException) {
+            } catch (_: TimeoutCancellationException) {
                 println("Workshop items request timed out")
                 steamSimpleWorkshopItems = emptyList()
             } catch (e: Exception) {
