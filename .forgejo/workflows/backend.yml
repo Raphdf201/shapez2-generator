@@ -1,0 +1,37 @@
+name: Build backend
+
+on:
+  push:
+    paths:
+      - "server/**"
+      - "shared/**"
+      - ".github/**"
+      - "gradle/libs.versions.toml"
+      - "build.gradle.kts"
+      - "gradle.properties"
+      - "settings.gradle.kts"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v6
+      - name: setup jdk
+        uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: 21
+      - name: setup gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-disabled: false
+      - name: Build
+        run: chmod +x ./gradlew && ./gradlew server:buildFatJar
+      - uses: actions/upload-artifact@v6
+        with:
+          name: jar
+          path: server/build/libs/server-all.jar
+          if-no-files-found: error
+          overwrite: true
+  
