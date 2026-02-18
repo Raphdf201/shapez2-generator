@@ -28,10 +28,4 @@ jobs:
           cache-disabled: false
       - name: Build
         run: chmod +x ./gradlew && ./gradlew server:buildFatJar
-      - uses: actions/upload-artifact@v6
-        with:
-          name: jar
-          path: server/build/libs/server-all.jar
-          if-no-files-found: error
-          overwrite: true
-  
+
