@@ -5,7 +5,7 @@ on:
     paths:
       - "server/**"
       - "shared/**"
-      - ".github/**"
+      - ".forgejo/workflows/backend.yml"
       - "gradle/libs.versions.toml"
       - "build.gradle.kts"
       - "gradle.properties"

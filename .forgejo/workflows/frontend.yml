@@ -5,7 +5,7 @@ on:
     paths:
       - "composeApp/**"
       - "shared/**"
-      - ".github/**"
+      - ".forgejo/workflows/frontend.yml"
       - "gradle/libs.versions.toml"
       - "build.gradle.kts"
       - "gradle.properties"
