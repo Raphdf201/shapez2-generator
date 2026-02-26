@@ -28,7 +28,7 @@ jobs:
           cache-disabled: false
       - name: Build
         run: chmod +x ./gradlew && ./gradlew server:buildFatJar
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: jar
           path: server/build/libs/server-all.jar
