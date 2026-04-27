@@ -1,8 +1,6 @@
-Better docs : [https://shapez2.raphdf201.net/](https://shapez2.raphdf201.net/)
+# shapez 2 api
 
-api things
-list items : https://www.raphdf201.net/shapez2-generator/api/v1/item/list
-get info about one item : https://www.raphdf201.net/shapez2-generator/api/v1/item/{id}?name=thing
+[api docs](https://shapez2api.raphdf201.net/v1/openapi)
 
 server config format : put a file named config in the working dir of the server
 
@@ -17,3 +15,7 @@ steampw         // 6
 ```
 
 [stack](https://discord.com/channels/1000343719314198548/1000357913996566590/1455725306219331668)
+
+## warning
+
+the generator project is deprecated and replaced by the [.net template](https://github.com/Raphdf201/shapez2-template)
