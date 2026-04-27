@@ -12,6 +12,7 @@ import net.raphdf201.shapez2generator.steamUser
 import net.raphdf201.shapez2generator.workshopDownloadPath
 import java.io.File
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 
 suspend fun getWorkshopItem(id: UInt, title: String): DbWorkshopItem {
     val steamItem = getSteamItemList().singleOrNull { it.id == id }
@@ -77,7 +78,7 @@ private suspend fun downloadItem(id: UInt) {
             return
         } catch (e: Exception) {
             if (attempt == 2) throw e
-            delay(1000L * (attempt + 1)) // Exponential backoff
+            delay((1000L * (attempt + 1)).milliseconds) // Exponential backoff
         }
     }
 }
