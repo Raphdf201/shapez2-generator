@@ -28,7 +28,6 @@ class DbService(db: Database) {
         val id = uinteger("id").uniqueIndex()
         val lastSteamUpdate = long("laststeamupdate")
         val lastLocalUpdate = long("lastlocalupdate")
-        val manifName = varchar("maniftitle", 128)
         val steamName = varchar("steamtitle", 128)
         val dlls = array("dlls", VarCharColumnType())
         val latestVersion = varchar("latestversion", 32)
@@ -47,7 +46,6 @@ class DbService(db: Database) {
             it[id] = item.id
             it[lastSteamUpdate] = item.lastSteamUpdate
             it[lastLocalUpdate] = item.lastLocalUpdate
-            it[manifName] = item.manifestName
             it[steamName] = item.steamName
             it[dlls] = item.dlls
             it[latestVersion] = item.latestVersion
@@ -66,7 +64,6 @@ class DbService(db: Database) {
                 it[WorkshopItems.id],
                 it[WorkshopItems.lastSteamUpdate],
                 it[WorkshopItems.lastLocalUpdate],
-                it[WorkshopItems.manifName],
                 it[WorkshopItems.steamName],
                 it[WorkshopItems.dlls],
                 it[WorkshopItems.latestVersion],
@@ -78,7 +75,6 @@ class DbService(db: Database) {
         WorkshopItems.update({ WorkshopItems.id eq item.id }) {
             it[lastSteamUpdate] = item.lastSteamUpdate
             it[lastLocalUpdate] = item.lastLocalUpdate
-            it[manifName] = item.manifestName
             it[steamName] = item.steamName
             it[dlls] = item.dlls
             it[latestVersion] = item.latestVersion

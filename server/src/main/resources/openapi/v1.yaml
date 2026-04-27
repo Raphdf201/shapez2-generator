@@ -16,11 +16,6 @@ paths:
           schema:
             type: "integer"
             format: "int32"
-        - name: "name"
-          in: "query"
-          required: true
-          schema:
-            type: "string"
       responses:
         "400":
           description: "Bad Request"
@@ -80,8 +75,6 @@ components:
         lastLocalUpdate:
           type: "integer"
           format: "int64"
-        manifestName:
-          type: "string"
         steamName:
           type: "string"
         latestVersion:
@@ -90,7 +83,6 @@ components:
         - "id"
         - "lastSteamUpdate"
         - "lastLocalUpdate"
-        - "manifestName"
         - "steamName"
         - "latestVersion"
     SimpleWorkshopItem:

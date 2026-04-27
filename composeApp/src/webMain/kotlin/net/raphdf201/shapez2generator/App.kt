@@ -118,7 +118,7 @@ fun App() {
                                 modAssemblies += tmpAssemblies
                                 modDependencies += ManifestDependency(
                                     "steam:${dep.id}",
-                                    dep.manifestName,
+                                    dep.steamName,
                                     "^${dep.latestVersion}"
                                 )
                             }

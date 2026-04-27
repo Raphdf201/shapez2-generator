@@ -1,27 +1,19 @@
 package net.raphdf201.shapez2generator.api
 
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
-import io.ktor.server.plugins.swagger.swaggerUI
-import io.ktor.server.response.respond
-import io.ktor.server.routing.get
-import io.ktor.server.routing.route
-import io.ktor.server.routing.routing
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonArray
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.plugins.swagger.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import net.raphdf201.shapez2generator.cache.CachedWorkshopItem
 import net.raphdf201.shapez2generator.SimpleWorkshopItem
-import net.raphdf201.shapez2generator.apikey
-import net.raphdf201.shapez2generator.client
-import net.raphdf201.shapez2generator.db
+import net.raphdf201.shapez2generator.cache.CachedWorkshopItem
 import net.raphdf201.shapez2generator.cache.getWorkshopItem
 import net.raphdf201.shapez2generator.cache.shouldUpdateSteamList
-import net.raphdf201.shapez2generator.steam.IPublishedFileService
 import net.raphdf201.shapez2generator.cache.updateSteamItemList
+import net.raphdf201.shapez2generator.db
+import net.raphdf201.shapez2generator.steam.IPublishedFileService
 
 fun Application.v1Routes() {
     routing {
@@ -29,12 +21,7 @@ fun Application.v1Routes() {
             swaggerUI("openapi", "openapi/v1.yaml")
             route("/item") {
                 get("/list") {
-                    val newList = Json.parseToJsonElement(client.get(IPublishedFileService.url) {
-                        url {
-                            parameters.append("key", apikey)
-                            parameters.append("input_json", Json.encodeToString(IPublishedFileService.query))
-                        }
-                    }.bodyAsText()).jsonObject["response"]?.jsonObject["publishedfiledetails"]?.jsonArray
+                    val newList = IPublishedFileService.getCache()
                     val simpleList = mutableListOf<SimpleWorkshopItem>()
                     val steamItemListTmp = mutableListOf<CachedWorkshopItem>()
                     newList?.forEach {
@@ -48,11 +35,13 @@ fun Application.v1Routes() {
                                     title.content
                                 )
                             )
-                            steamItemListTmp.add(CachedWorkshopItem(
-                                id.content.toUInt(),
-                                title.content,
-                                updateTime.content.toLong()
-                            ))
+                            steamItemListTmp.add(
+                                CachedWorkshopItem(
+                                    id.content.toUInt(),
+                                    title.content,
+                                    updateTime.content.toLong()
+                                )
+                            )
                         }
                     }
                     if (shouldUpdateSteamList()) updateSteamItemList(steamItemListTmp)
@@ -61,15 +50,13 @@ fun Application.v1Routes() {
                 get("/{id}") {
                     val id = call.pathParameters["id"]?.toUIntOrNull()
                         ?: return@get call.respond(HttpStatusCode.BadRequest, "Invalid ID")
-                    val title = call.queryParameters["name"]
-                        ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing title")
                     try {
-                        val item = db.read(id) ?: db.createAndGet(getWorkshopItem(id, title))
+                        val item = db.read(id) ?: db.createAndGet(getWorkshopItem(id))
                         call.respond(item)
                     } catch (e: IllegalArgumentException) {
                         call.respond(HttpStatusCode.NotFound, e.message ?: "Item not found")
                     } catch (e: Exception) {
-                        call.respond(HttpStatusCode.InternalServerError, "Failed to fetch : ${e.message}")
+                        call.respond(HttpStatusCode.InternalServerError, "Error : ${e.message}")
                     }
                 }
             }

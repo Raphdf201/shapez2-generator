@@ -11,7 +11,6 @@ data class SimpleWorkshopItem(
 @Serializable
 data class SharedWorkshopItem(
     val id: UInt,
-    val manifestName: String,
     val steamName: String,
     val dlls: List<String>,
     val latestVersion: String,
@@ -22,7 +21,6 @@ data class DbWorkshopItem(
     val id: UInt,
     val lastSteamUpdate: Long,
     val lastLocalUpdate: Long,
-    val manifestName: String,
     val steamName: String,
     val dlls: List<String>,
     val latestVersion: String,

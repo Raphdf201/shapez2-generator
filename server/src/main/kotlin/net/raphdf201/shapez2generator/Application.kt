@@ -14,6 +14,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import net.raphdf201.shapez2generator.api.v1Routes
 import java.io.File
+import java.util.TimeZone
 
 fun main() {
     embeddedServer(Netty, port = SERVER_PORT, host = "0.0.0.0", module = Application::module)
@@ -21,6 +22,8 @@ fun main() {
 }
 
 fun Application.module() {
+    TimeZone.setDefault(TimeZone.getTimeZone("America/Toronto"))
+
     install(ServerContentNegotiation) {
         json()
     }

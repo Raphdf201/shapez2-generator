@@ -1,14 +1,39 @@
 package net.raphdf201.shapez2generator.steam
 
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import net.raphdf201.shapez2generator.apikey
+import net.raphdf201.shapez2generator.client
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
 
 // https://partner.steamgames.com/doc/webapi/IPublishedFileService#QueryFiles
 
 class IPublishedFileService {
     companion object {
-        const val url = "https://api.steampowered.com/IPublishedFileService/QueryFiles/v1/"
-        val query = WorkshopItemQuery(
+        private const val URL = "https://api.steampowered.com/IPublishedFileService/QueryFiles/v1/"
+
+        private var cache: JsonArray? = null
+        private var cacheAge = Clock.System.now()
+
+        suspend fun getCache(): JsonArray? {
+            if (cache != null && Clock.System.now() - cacheAge > 60.seconds) return cache
+            cacheAge = Clock.System.now()
+            return Json.parseToJsonElement(client.get(URL) {
+                url {
+                    parameters.append("key", apikey)
+                    parameters.append("input_json", Json.encodeToString(query))
+                }
+            }.bodyAsText()).jsonObject["response"]?.jsonObject["publishedfiledetails"]?.jsonArray
+        }
+
+        private val query = WorkshopItemQuery(
             queryType = EPublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS.value,
             page = 1,
             cursor = "*",

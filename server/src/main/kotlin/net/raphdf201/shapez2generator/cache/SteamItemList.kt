@@ -2,6 +2,9 @@ package net.raphdf201.shapez2generator.cache
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import net.raphdf201.shapez2generator.steam.IPublishedFileService
 import kotlin.time.Clock
 
 private val steamItemListMutex = Mutex()
@@ -20,3 +23,20 @@ suspend fun getSteamItemList(): List<CachedWorkshopItem> =
 
 suspend fun updateSteamItemList(newList: List<CachedWorkshopItem>) =
     steamItemListMutex.withLock { steamItemList = newList }
+
+suspend fun updateSteamItemList() {
+    val cache = IPublishedFileService.getCache()
+    val newList = mutableListOf<CachedWorkshopItem>()
+    cache?.forEach {
+        val id = it.jsonObject["publishedfileid"]?.jsonPrimitive
+        val title = it.jsonObject["title"]?.jsonPrimitive
+        val updateTime = it.jsonObject["time_updated"]?.jsonPrimitive
+        if (title != null && id != null && updateTime != null)
+            newList.add(CachedWorkshopItem(
+                id.content.toUInt(),
+                title.content,
+                updateTime.content.toLong()
+            ))
+    }
+    updateSteamItemList(newList)
+}

@@ -2,7 +2,6 @@ package net.raphdf201.shapez2generator
 
 fun DbWorkshopItem.toSharedWorkshopItem(): SharedWorkshopItem = SharedWorkshopItem(
     this.id,
-    this.manifestName,
     this.steamName,
     this.dlls,
     this.latestVersion

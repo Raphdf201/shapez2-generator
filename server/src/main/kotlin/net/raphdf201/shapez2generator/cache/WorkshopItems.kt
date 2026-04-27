@@ -14,13 +14,16 @@ import java.io.File
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 
-suspend fun getWorkshopItem(id: UInt, title: String): DbWorkshopItem {
-    val steamItem = getSteamItemList().singleOrNull { it.id == id }
-        ?: throw IllegalArgumentException("Workshop item $id not found")
+suspend fun getWorkshopItem(id: UInt): DbWorkshopItem {
+    var steamItem = getSteamItemList().singleOrNull { it.id == id }
+    if (steamItem == null) {
+        updateSteamItemList()
+        steamItem = getSteamItemList().singleOrNull { it.id == id }
+    }
+    if (steamItem == null) throw IllegalArgumentException("Workshop item $id not found")
 
     val cachedItem = db.read(id)
 
-    // If we have a cached version and Steam hasn't updated since our last check
     if (cachedItem != null && steamItem.updateTime <= cachedItem.lastSteamUpdate) {
         return cachedItem
     }
@@ -37,8 +40,7 @@ suspend fun getWorkshopItem(id: UInt, title: String): DbWorkshopItem {
         id,
         steamItem.updateTime,
         Clock.System.now().epochSeconds,
-        serialized.Title ?: title.removeWhitespace(),
-        title,
+        steamItem.title,
         serialized.Assemblies,
         serialized.Version
     )
@@ -47,6 +49,7 @@ suspend fun getWorkshopItem(id: UInt, title: String): DbWorkshopItem {
 }
 
 private suspend fun downloadItem(id: UInt) {
+    println("Running \"steamcmd +login $steamUser +workshop_download_item 2162800 $id +quit\"")
     repeat(3) { attempt ->
         try {
             val process = withContext(Dispatchers.IO) {
@@ -75,6 +78,7 @@ private suspend fun downloadItem(id: UInt) {
             if (exitCode != 0) {
                 throw Exception("SteamCMD failed (exit $exitCode): $outputText")
             }
+            println(outputText)
             return
         } catch (e: Exception) {
             if (attempt == 2) throw e
