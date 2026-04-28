@@ -1,13 +1,12 @@
 package net.raphdf201.shapez2generator.steam
 
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
 import net.raphdf201.shapez2generator.apikey
 import net.raphdf201.shapez2generator.client
 import kotlin.time.Clock
@@ -19,18 +18,37 @@ class IPublishedFileService {
     companion object {
         private const val URL = "https://api.steampowered.com/IPublishedFileService/QueryFiles/v1/"
 
-        private var cache: JsonArray? = null
+        private var cache: List<PublishedFile>? = null
         private var cacheAge = Clock.System.now()
+        private val cacheLock = Mutex()
+        private var isFetching = false
 
-        suspend fun getCache(): JsonArray? {
-            if (cache != null && Clock.System.now() - cacheAge > 60.seconds) return cache
-            cacheAge = Clock.System.now()
-            return Json.parseToJsonElement(client.get(URL) {
+        suspend fun getCache(): List<PublishedFile> {
+            val cachedResult: List<PublishedFile>? = cacheLock.withLock {
+                if (cache != null && Clock.System.now() - cacheAge < 60.seconds) {
+                    return@withLock cache
+                }
+                if (isFetching) {
+                    return@withLock cache
+                }
+                isFetching = true
+                return@withLock null
+            }
+            if (cachedResult != null) return cachedResult
+
+            val result = Json.decodeFromString<SteamWorkshopResponse>(client.get(URL) {
                 url {
                     parameters.append("key", apikey)
                     parameters.append("input_json", Json.encodeToString(query))
                 }
-            }.bodyAsText()).jsonObject["response"]?.jsonObject["publishedfiledetails"]?.jsonArray
+            }.bodyAsText()).response
+
+            return cacheLock.withLock {
+                isFetching = false
+                cacheAge = Clock.System.now()
+                cache = result.publishedFileDetails
+                cache!!
+            }
         }
 
         private val query = WorkshopItemQuery(
@@ -56,7 +74,7 @@ class IPublishedFileService {
             totalOnly = null,
             idsOnly = false,
             returnVoteData = false,
-            returnTags = false,
+            returnTags = true,
             returnKvTags = false,
             returnPreviews = false,
             returnChildren = false,
@@ -209,3 +227,139 @@ class IPublishedFileService {
         }
     }
 }
+
+@Serializable
+data class SteamWorkshopResponse(
+    val response: WorkshopResponse
+)
+
+@Serializable
+data class PagedSteamWorkshopResponse(
+    val response: PagedWorkshopResponse
+)
+
+@Serializable
+data class WorkshopResponse(
+    val total: Int,
+    @SerialName("publishedfiledetails")
+    val publishedFileDetails: List<PublishedFile>,
+    @SerialName("next_cursor")
+    val nextCursor: String? = null
+)
+
+@Serializable
+data class PagedWorkshopResponse(
+    val total: Int,
+    @SerialName("publishedfiledetails")
+    val publishedFileDetails: List<PublishedFile>? = null,
+    @SerialName("next_cursor")
+    val nextCursor: String? = null
+)
+
+@Serializable
+data class PublishedFile(
+    val result: Int,
+    @SerialName("publishedfileid")
+    val publishedFileId: String,
+    val creator: String,
+    @SerialName("creator_appid")
+    val creatorAppId: Int,
+    @SerialName("consumer_appid")
+    val consumerAppId: Int,
+    @SerialName("consumer_shortcutid")
+    val consumerShortcutId: Int = 0,
+    val filename: String = "",
+    @SerialName("file_size")
+    val fileSize: String,
+    @SerialName("preview_file_size")
+    val previewFileSize: String,
+    @SerialName("preview_url")
+    val previewUrl: String,
+    val url: String = "",
+    @SerialName("hcontent_file")
+    val hcontentFile: String,
+    @SerialName("hcontent_preview")
+    val hcontentPreview: String,
+    val title: String,
+    @SerialName("file_description")
+    val fileDescription: String,
+    @SerialName("time_created")
+    val timeCreated: Long,
+    @SerialName("time_updated")
+    val timeUpdated: Long,
+    val visibility: Int,
+    val flags: Long,
+    @SerialName("workshop_file")
+    val workshopFile: Boolean,
+    @SerialName("workshop_accepted")
+    val workshopAccepted: Boolean,
+    @SerialName("show_subscribe_all")
+    val showSubscribeAll: Boolean,
+    @SerialName("num_comments_public")
+    val numCommentsPublic: Int,
+    @SerialName("num_comments_developer")
+    val numCommentsDeveloper: Int? = 0,
+    val banned: Boolean,
+    @SerialName("ban_reason")
+    val banReason: String = "",
+    val banner: String,
+    @SerialName("can_be_deleted")
+    val canBeDeleted: Boolean,
+    @SerialName("app_name")
+    val appName: String,
+    @SerialName("file_type")
+    val fileType: Int,
+    @SerialName("can_subscribe")
+    val canSubscribe: Boolean,
+    val subscriptions: Int,
+    val favorited: Int,
+    val followers: Int,
+    @SerialName("lifetime_subscriptions")
+    val lifetimeSubscriptions: Int,
+    @SerialName("lifetime_favorited")
+    val lifetimeFavorited: Int,
+    @SerialName("lifetime_followers")
+    val lifetimeFollowers: Int,
+    @SerialName("lifetime_playtime")
+    val lifetimePlaytime: String,
+    @SerialName("lifetime_playtime_sessions")
+    val lifetimePlaytimeSessions: String,
+    val views: Int,
+    @SerialName("num_children")
+    val numChildren: Int,
+    @SerialName("num_reports")
+    val numReports: Int,
+    val tags: List<Tag>? = null,
+    val language: Int,
+    @SerialName("maybe_inappropriate_sex")
+    val maybeInappropriateSex: Boolean,
+    @SerialName("maybe_inappropriate_violence")
+    val maybeInappropriateViolence: Boolean,
+    @SerialName("revision_change_number")
+    val revisionChangeNumber: String,
+    val revision: Int,
+    @SerialName("ban_text_check_result")
+    val banTextCheckResult: Int? = 0,
+    val metadata: String? = "",
+    @SerialName("available_revisions")
+    val availableRevisions: List<Int>? = null,
+    @SerialName("author_snapshots")
+    val authorSnapshots: List<AuthorSnapshot>? = null
+)
+
+@Serializable
+data class Tag(
+    val tag: String,
+    @SerialName("display_name")
+    val displayName: String
+)
+
+@Serializable
+data class AuthorSnapshot(
+    val timestamp: Long,
+    @SerialName("game_branch_min")
+    val gameBranchMin: String,
+    @SerialName("game_branch_max")
+    val gameBranchMax: String,
+    val manifestid: String
+)

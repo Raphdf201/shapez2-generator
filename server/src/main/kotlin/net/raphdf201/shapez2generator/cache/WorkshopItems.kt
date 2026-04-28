@@ -42,8 +42,8 @@ suspend fun getWorkshopItem(id: UInt): DbWorkshopItem {
         steamItem.updateTime,
         Clock.System.now().epochSeconds,
         steamItem.title,
-        serialized.Assemblies,
-        serialized.Version
+        serialized.assemblies,
+        serialized.version
     )
     db.update(newItem)
     return newItem

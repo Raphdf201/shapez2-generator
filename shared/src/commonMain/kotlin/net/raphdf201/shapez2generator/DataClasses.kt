@@ -1,5 +1,6 @@
 package net.raphdf201.shapez2generator
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -28,23 +29,38 @@ data class DbWorkshopItem(
 
 @Serializable
 data class Manifest(
-    val Version: String,
-    val Title: String? = null,
-    val Description: String? = null,
-    val Author: String? = null,
-    val SavedModVersionCompabilityRangeWithSelf: String? = null,
-    val GameVersionSupportRange: String? = null,
-    val AffectsSaveGames: Boolean? = null,
-    val DisablesAchievements: Boolean? = null,
-    val Conflicts: List<String>? = null,
-    val IconPath: String? = null,
-    val Assemblies: List<String>,
-    val Dependencies: List<ManifestDependency>? = null
+    @SerialName("Version")
+    val version: String,
+    @SerialName("Title")
+    val title: String? = null,
+    @SerialName("Description")
+    val description: String? = null,
+    @SerialName("Author")
+    val author: String? = null,
+    @SerialName("SavedModVersionCompabilityRangeWithSelf")
+    val savedModVersionCompabilityRangeWithSelf: String? = null,
+    @SerialName("GameVersionSupportRange")
+    val gameVersionSupportRange: String? = null,
+    @SerialName("AffectsSaveGames")
+    val affectsSaveGames: Boolean? = null,
+    @SerialName("DisablesAchievements")
+    val disablesAchievements: Boolean? = null,
+    @SerialName("Conflicts")
+    val conflicts: List<String>? = null,
+    @SerialName("IconPath")
+    val iconPath: String? = null,
+    @SerialName("Assemblies")
+    val assemblies: List<String>,
+    @SerialName("Dependencies")
+    val dependencies: List<ManifestDependency>? = null
 )
 
 @Serializable
 data class ManifestDependency(
-    val ModId: String,
-    val ModTitle: String,
-    val Version: String
+    @SerialName("ModId")
+    val modId: String,
+    @SerialName("ModTitle")
+    val modTitle: String,
+    @SerialName("Version")
+    val version: String
 )

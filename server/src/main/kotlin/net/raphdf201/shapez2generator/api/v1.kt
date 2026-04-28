@@ -5,8 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.swagger.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
 import net.raphdf201.shapez2generator.SimpleWorkshopItem
 import net.raphdf201.shapez2generator.cache.CachedWorkshopItem
 import net.raphdf201.shapez2generator.cache.getWorkshopItem
@@ -24,25 +22,20 @@ fun Application.v1Routes() {
                     val newList = IPublishedFileService.getCache()
                     val simpleList = mutableListOf<SimpleWorkshopItem>()
                     val steamItemListTmp = mutableListOf<CachedWorkshopItem>()
-                    newList?.forEach {
-                        val id = it.jsonObject["publishedfileid"]?.jsonPrimitive
-                        val title = it.jsonObject["title"]?.jsonPrimitive
-                        val updateTime = it.jsonObject["time_updated"]?.jsonPrimitive
-                        if (title != null && id != null && updateTime != null) {
-                            simpleList.add(
-                                SimpleWorkshopItem(
-                                    id.content.toUInt(),
-                                    title.content
-                                )
+                    newList.forEach {
+                        simpleList.add(
+                            SimpleWorkshopItem(
+                                it.publishedFileId.toUInt(),
+                                it.title
                             )
-                            steamItemListTmp.add(
-                                CachedWorkshopItem(
-                                    id.content.toUInt(),
-                                    title.content,
-                                    updateTime.content.toLong()
-                                )
+                        )
+                        steamItemListTmp.add(
+                            CachedWorkshopItem(
+                                it.publishedFileId.toUInt(),
+                                it.title,
+                                it.timeUpdated
                             )
-                        }
+                        )
                     }
                     if (shouldUpdateSteamList()) updateSteamItemList(steamItemListTmp)
                     call.respond(simpleList)
