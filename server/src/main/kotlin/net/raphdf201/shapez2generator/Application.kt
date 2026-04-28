@@ -50,3 +50,12 @@ val dbUser = config[2]
 val dbPassword = config[3]
 val workshopDownloadPath = config[4]
 val steamUser = config[5]
+val steamCmdPath = try {
+    val it = config[6]
+    if (it.isBlank() || it.isEmpty()) throw Exception("no steamcmd path")
+    else it
+} catch (e: Exception) {
+    println("Error : ${e.message}")
+    println("using default \"steamcmd\" path")
+    "steamcmd"
+}

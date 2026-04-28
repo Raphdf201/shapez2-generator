@@ -8,6 +8,7 @@ import net.raphdf201.shapez2generator.Manifest
 import net.raphdf201.shapez2generator.db
 import net.raphdf201.shapez2generator.notStrictJson
 import net.raphdf201.shapez2generator.removeWhitespace
+import net.raphdf201.shapez2generator.steamCmdPath
 import net.raphdf201.shapez2generator.steamUser
 import net.raphdf201.shapez2generator.workshopDownloadPath
 import java.io.File
@@ -54,8 +55,8 @@ private suspend fun downloadItem(id: UInt) {
         try {
             val process = withContext(Dispatchers.IO) {
                 ProcessBuilder(
-                    "steamcmd",
-                    "+login", steamUser,// steamPassword,
+                    steamCmdPath,
+                    "+login", steamUser,
                     "+workshop_download_item", "2162800", id.toString(),
                     "+quit"
                 ).redirectErrorStream(true).start()
