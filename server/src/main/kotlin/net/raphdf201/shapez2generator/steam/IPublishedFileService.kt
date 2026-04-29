@@ -52,6 +52,12 @@ class IPublishedFileService {
             }
         }
 
+        suspend fun getTags(): Set<Tag> {
+            val tags = mutableSetOf<Tag>()
+            getCache().forEach { tags.addAll(it.tags.orEmpty()) }
+            return tags
+        }
+
         private val query = WorkshopItemQuery(
             queryType = EPublishedFileQueryType.RANKED_BY_TOTAL_UNIQUE_SUBSCRIPTIONS.value,
             page = 1,

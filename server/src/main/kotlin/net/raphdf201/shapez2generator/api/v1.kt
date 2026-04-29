@@ -55,6 +55,9 @@ fun Application.v1Routes() {
                     }
                 }
             }
+            get("/tags") {
+                call.respond(IPublishedFileService.getTags())
+            }
         }
     }
 }

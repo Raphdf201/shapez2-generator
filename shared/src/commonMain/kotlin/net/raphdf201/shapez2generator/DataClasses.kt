@@ -15,7 +15,15 @@ data class Tag(
     val tag: String,
     @SerialName("display_name")
     val displayName: String
-)
+) {
+    override fun hashCode() = this.tag.hashCode()
+    override fun toString() = this.displayName
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Tag) return false
+        return this.tag == other.tag
+    }
+}
 
 @Serializable
 data class SharedWorkshopItem(
