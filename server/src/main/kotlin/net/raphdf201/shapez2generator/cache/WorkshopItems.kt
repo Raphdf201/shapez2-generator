@@ -3,14 +3,7 @@ package net.raphdf201.shapez2generator.cache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import net.raphdf201.shapez2generator.DbWorkshopItem
-import net.raphdf201.shapez2generator.Manifest
-import net.raphdf201.shapez2generator.db
-import net.raphdf201.shapez2generator.notStrictJson
-import net.raphdf201.shapez2generator.removeWhitespace
-import net.raphdf201.shapez2generator.steamCmdPath
-import net.raphdf201.shapez2generator.steamUser
-import net.raphdf201.shapez2generator.workshopDownloadPath
+import net.raphdf201.shapez2generator.*
 import java.io.File
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
@@ -43,7 +36,8 @@ suspend fun getWorkshopItem(id: UInt): DbWorkshopItem {
         Clock.System.now().epochSeconds,
         steamItem.title,
         serialized.assemblies,
-        serialized.version
+        serialized.version,
+        steamItem.tags
     )
     db.update(newItem)
     return newItem
@@ -92,4 +86,5 @@ data class CachedWorkshopItem(
     val id: UInt,
     val title: String,
     val updateTime: Long,
+    val tags: List<Tag>
 )

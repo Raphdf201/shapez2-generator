@@ -6,7 +6,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SimpleWorkshopItem(
     val id: UInt,
-    val steamName: String
+    val steamName: String,
+    val tags: List<Tag>
+)
+
+@Serializable
+data class Tag(
+    val tag: String,
+    @SerialName("display_name")
+    val displayName: String
 )
 
 @Serializable
@@ -25,6 +33,7 @@ data class DbWorkshopItem(
     val steamName: String,
     val dlls: List<String>,
     val latestVersion: String,
+    val tags: List<Tag>
 )
 
 @Serializable

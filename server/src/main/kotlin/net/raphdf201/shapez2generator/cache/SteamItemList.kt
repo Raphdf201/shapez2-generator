@@ -27,6 +27,7 @@ suspend fun updateSteamItemList() =
         CachedWorkshopItem(
             it.publishedFileId.toUInt(),
             it.title,
-            it.timeUpdated
+            it.timeUpdated,
+            it.tags.orEmpty()
         )
     })

@@ -7,6 +7,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import net.raphdf201.shapez2generator.Tag
 import net.raphdf201.shapez2generator.apikey
 import net.raphdf201.shapez2generator.client
 import kotlin.time.Clock
@@ -345,13 +346,6 @@ data class PublishedFile(
     val availableRevisions: List<Int>? = null,
     @SerialName("author_snapshots")
     val authorSnapshots: List<AuthorSnapshot>? = null
-)
-
-@Serializable
-data class Tag(
-    val tag: String,
-    @SerialName("display_name")
-    val displayName: String
 )
 
 @Serializable

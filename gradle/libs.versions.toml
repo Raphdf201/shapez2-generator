@@ -33,6 +33,7 @@ ktor-server-swagger = { module = "io.ktor:ktor-server-swagger", version.ref = "k
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 db-exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 db-exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+db-exposed-json = { module = "org.jetbrains.exposed:exposed-json", version.ref = "exposed" }
 db-postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 
 [plugins]

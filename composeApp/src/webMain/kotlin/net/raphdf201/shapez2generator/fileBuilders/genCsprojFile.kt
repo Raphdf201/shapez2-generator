@@ -94,7 +94,7 @@ fun genAndDownloadCsproj(
     assemblies: List<Assembly>,
     modAssemblies: List<Assembly>,
 ) {
-    val csprojContent = genCsprojFile(projectId, langVersion, assemblies, modAssemblies, modDependencies[0].ModTitle == "ShapezShifter")
+    val csprojContent = genCsprojFile(projectId, langVersion, assemblies, modAssemblies, modDependencies[0].modTitle == "ShapezShifter")
     val blob = createTextBlob(csprojContent)
     saveAs(blob, "$projectId.csproj")
 }

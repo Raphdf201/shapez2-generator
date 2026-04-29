@@ -26,14 +26,16 @@ fun Application.v1Routes() {
                         simpleList.add(
                             SimpleWorkshopItem(
                                 it.publishedFileId.toUInt(),
-                                it.title
+                                it.title,
+                                it.tags.orEmpty()
                             )
                         )
                         steamItemListTmp.add(
                             CachedWorkshopItem(
                                 it.publishedFileId.toUInt(),
                                 it.title,
-                                it.timeUpdated
+                                it.timeUpdated,
+                                it.tags.orEmpty()
                             )
                         )
                     }

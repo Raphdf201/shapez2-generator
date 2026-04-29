@@ -28,5 +28,6 @@ dependencies {
     implementation(libs.ktor.serialization.json)
     implementation(libs.db.exposed.core)
     implementation(libs.db.exposed.jdbc)
+    implementation(libs.db.exposed.json)
     implementation(libs.db.postgres)
 }

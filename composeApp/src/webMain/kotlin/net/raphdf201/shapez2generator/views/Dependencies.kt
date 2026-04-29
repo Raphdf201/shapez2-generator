@@ -105,16 +105,16 @@ fun DependencyCard(
 ) {
     OutlinedCard(Modifier.width(dependenciesWidth)) {
         TextField(
-            value = dependency.ModId,
-            onValueChange = { onDependencyChange(ManifestDependency(it, dependency.ModTitle, dependency.Version)) },
+            value = dependency.modId,
+            onValueChange = { onDependencyChange(ManifestDependency(it, dependency.modTitle, dependency.version)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Mod Id") },
             singleLine = true
         )
 
         TextField(
-            value = dependency.ModTitle,
-            onValueChange = { onDependencyChange(ManifestDependency(dependency.ModId, it, dependency.Version)) },
+            value = dependency.modTitle,
+            onValueChange = { onDependencyChange(ManifestDependency(dependency.modId, it, dependency.version)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Mod Title") },
             singleLine = true
@@ -122,8 +122,8 @@ fun DependencyCard(
 
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             TextField(
-                value = dependency.Version,
-                onValueChange = { onDependencyChange(ManifestDependency(dependency.ModId, dependency.ModTitle, it)) },
+                value = dependency.version,
+                onValueChange = { onDependencyChange(ManifestDependency(dependency.modId, dependency.modTitle, it)) },
                 label = { Text("Version") },
                 singleLine = true
             )

@@ -23,7 +23,7 @@ fun genAndDownloadZip(
     assemblies: List<Assembly>,
     modAssemblies: List<Assembly>
 ) {
-    val shapezShifterIncluded = modDependencies.any { it.ModId.endsWith(ModIds.ShapezShifter) }
+    val shapezShifterIncluded = modDependencies.any { it.modId.endsWith(ModIds.ShapezShifter) }
     val zip = createZip()
     zip.file(".gitignore", genGitignoreFile())
     zip.file("Main.cs", genMainFile(projectId,
@@ -31,18 +31,18 @@ fun genAndDownloadZip(
     zip.file(
         "manifest.json", genManifestFile(
             Manifest(
-                Version = version,
-                Title = projectTitle,
-                Description = projectDescription,
-                Author = projectAuthor,
-                SavedModVersionCompabilityRangeWithSelf = "0.*.*",
-                GameVersionSupportRange = gameVersionSupportRange,
-                AffectsSaveGames = affectsSavegames,
-                DisablesAchievements = disablesAchievements,
-                Conflicts = emptyList(),
-                IconPath = "",
-                Assemblies = listOf("$projectId.dll"),
-                Dependencies = modDependencies
+                version = version,
+                title = projectTitle,
+                description = projectDescription,
+                author = projectAuthor,
+                savedModVersionCompabilityRangeWithSelf = "0.*.*",
+                gameVersionSupportRange = gameVersionSupportRange,
+                affectsSaveGames = affectsSavegames,
+                disablesAchievements = disablesAchievements,
+                conflicts = emptyList(),
+                iconPath = "",
+                assemblies = listOf("$projectId.dll"),
+                dependencies = modDependencies
             )
         )
     )

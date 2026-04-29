@@ -1,26 +1,24 @@
 package net.raphdf201.shapez2generator
 
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.v1.core.Table
 import org.jetbrains.exposed.v1.core.VarCharColumnType
 import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.jdbc.Database
-import org.jetbrains.exposed.v1.jdbc.SchemaUtils
-import org.jetbrains.exposed.v1.jdbc.deleteWhere
-import org.jetbrains.exposed.v1.jdbc.insert
-import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.*
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import org.jetbrains.exposed.v1.jdbc.update
+import org.jetbrains.exposed.v1.json.jsonb
 
 lateinit var db: DbService
 
 fun database() {
-    db = DbService(Database.connect(
-        url = "jdbc:postgresql://$dbUrl",
-        driver = "org.postgresql.Driver",
-        user = dbUser,
-        password = dbPassword
-    ))
+    db = DbService(
+        Database.connect(
+            url = "jdbc:postgresql://$dbUrl",
+            driver = "org.postgresql.Driver",
+            user = dbUser,
+            password = dbPassword
+        )
+    )
 }
 
 class DbService(db: Database) {
@@ -31,15 +29,9 @@ class DbService(db: Database) {
         val steamName = varchar("steamtitle", 128)
         val dlls = array("dlls", VarCharColumnType())
         val latestVersion = varchar("latestversion", 32)
-        // if schema changes, uncomment init
+        val tags = jsonb<List<Tag>>("tags", Json.Default)
         override val primaryKey = PrimaryKey(id)
     }
-
-    /*init {
-        transaction(db) {
-            SchemaUtils.createMissingTablesAndColumns(WorkshopItems)
-        }
-    }*/
 
     suspend fun create(item: DbWorkshopItem) = suspendTransaction {
         WorkshopItems.insert {
@@ -49,6 +41,7 @@ class DbService(db: Database) {
             it[steamName] = item.steamName
             it[dlls] = item.dlls
             it[latestVersion] = item.latestVersion
+            it[tags] = item.tags
         }
     }
 
@@ -60,14 +53,17 @@ class DbService(db: Database) {
     suspend fun read(id: UInt): DbWorkshopItem? = suspendTransaction {
         WorkshopItems.selectAll()
             .where { WorkshopItems.id eq id }
-            .map { DbWorkshopItem(
-                it[WorkshopItems.id],
-                it[WorkshopItems.lastSteamUpdate],
-                it[WorkshopItems.lastLocalUpdate],
-                it[WorkshopItems.steamName],
-                it[WorkshopItems.dlls],
-                it[WorkshopItems.latestVersion],
-            ) }
+            .map {
+                DbWorkshopItem(
+                    it[WorkshopItems.id],
+                    it[WorkshopItems.lastSteamUpdate],
+                    it[WorkshopItems.lastLocalUpdate],
+                    it[WorkshopItems.steamName],
+                    it[WorkshopItems.dlls],
+                    it[WorkshopItems.latestVersion],
+                    it[WorkshopItems.tags]
+                )
+            }
             .singleOrNull()
     }
 
@@ -78,6 +74,7 @@ class DbService(db: Database) {
             it[steamName] = item.steamName
             it[dlls] = item.dlls
             it[latestVersion] = item.latestVersion
+            it[tags] = item.tags
         }
     }
 
