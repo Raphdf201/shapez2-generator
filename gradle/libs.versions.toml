@@ -1,6 +1,6 @@
 [versions]
 androidx-lifecycle = "2.10.0"
-composeMultiplatform = "1.10.3"
+composeMultiplatform = "1.11.1"
 kotlin = "2.3.21"
 kotlinx-serialization = "1.11.0"
 compose = "1.7.3"
