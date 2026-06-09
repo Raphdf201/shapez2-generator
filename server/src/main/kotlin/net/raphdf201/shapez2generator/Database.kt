@@ -11,17 +11,16 @@ import org.jetbrains.exposed.v1.json.jsonb
 lateinit var db: DbService
 
 fun database() {
-    db = DbService(
-        Database.connect(
-            url = "jdbc:postgresql://$dbUrl",
-            driver = "org.postgresql.Driver",
-            user = dbUser,
-            password = dbPassword
-        )
+    Database.connect(
+        url = "jdbc:postgresql://$dbUrl",
+        driver = "org.postgresql.Driver",
+        user = dbUser,
+        password = dbPassword
     )
+    db = DbService()
 }
 
-class DbService(db: Database) {
+class DbService {
     object WorkshopItems : Table("workshop_items") {
         val id = uinteger("id").uniqueIndex()
         val lastSteamUpdate = long("laststeamupdate")

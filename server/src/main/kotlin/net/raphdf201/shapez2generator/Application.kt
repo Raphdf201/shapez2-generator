@@ -1,6 +1,5 @@
 package net.raphdf201.shapez2generator
 
-import io.ktor.client.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -9,10 +8,8 @@ import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import net.raphdf201.shapez2generator.api.v1Routes
-import java.io.File
 import java.util.*
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 
 fun main() {
     embeddedServer(Netty, port = SERVER_PORT, host = "0.0.0.0", module = Application::module)
@@ -22,7 +19,7 @@ fun main() {
 fun Application.module() {
     TimeZone.setDefault(TimeZone.getTimeZone("America/Toronto"))
 
-    install(ServerContentNegotiation) {
+    install(ContentNegotiation) {
         json()
     }
     install(XForwardedHeaders)
@@ -33,27 +30,4 @@ fun Application.module() {
             call.respondRedirect("https://shapez2.raphdf201.net", true)
         }
     }
-}
-
-val client = HttpClient {
-    install(ClientContentNegotiation) {
-        json()
-    }
-}
-
-private val config = File("config").readLines()
-val apikey = config[0]
-val dbUrl = config[1]
-val dbUser = config[2]
-val dbPassword = config[3]
-val workshopDownloadPath = config[4]
-val steamUser = config[5]
-val steamCmdPath = try {
-    val it = config[6]
-    if (it.isBlank() || it.isEmpty()) throw Exception("no steamcmd path")
-    else it
-} catch (e: Exception) {
-    println("Error : ${e.message}")
-    println("using default \"steamcmd\" path")
-    "steamcmd"
 }
